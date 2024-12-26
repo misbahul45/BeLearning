@@ -3,6 +3,8 @@ import { JWT as DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "./prisma";
 import bcrypt from "bcryptjs";
+import Google from "next-auth/providers/google"
+import GitHub from "next-auth/providers/github"
 
 interface User extends DefaultUser {
   id: string;
@@ -86,6 +88,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID as string,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET as string
+    }),
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID as string,
+      clientSecret: process.env.AUTH_GITHUB_SECRET as string
+    })
   ],
   callbacks: {
     async jwt({ token, user }): Promise<JWT> {
@@ -105,6 +115,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = token.image as string;
       }
       return session;
+    },
+    async signIn({ account, profile }) {
+      if (account?.provider) {
+        const email = profile?.email as string;
+        const username = profile?.name || `user${Date.now()}`;
+        const image = profile?.picture || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
+
+        let user = await prisma.user.findUnique({
+          where: { email },
+        });
+
+        if (!user) {
+          const password = await bcrypt.hash(email, 10);
+          user = await prisma.user.create({
+            data: {
+              email,
+              username: username.replace(/\s+/g, "").toLowerCase(),
+              password,
+              emailVerified: new Date(),
+              profile: {
+                create: {
+                  bio: "",
+                  image,
+                },
+              },
+            },
+          });
+        }
+
+        return true;
+      }
+      return false;
     },
   },
   session: {

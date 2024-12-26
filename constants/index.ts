@@ -1,19 +1,16 @@
+import { facebooksigninAction, githubsigninAction, googlesigninAction } from "@/actions/auth.actions";
+
 export const OAUTH=[
     {
         id:1,
-        fn:()=>{},
+        fn:googlesigninAction,
         icon:'./images/google.svg'
     },
     {
         id:2,
-        fn:()=>{},
+        fn:githubsigninAction,
         icon:'./images/github.svg'
     },
-    {
-        id:3,
-        fn:()=>{},
-        icon:'./images/facebook.svg'
-    }
 ] 
 
 export const feedbackData = [

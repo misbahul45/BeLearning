@@ -2,7 +2,6 @@
 import { signIn } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { AUTH_TYPES } from "@/types/auth.types";
-import { AUTH_VALIDATION } from "@/validations/auth.validation";
 import * as bcrypt from 'bcryptjs';
 import { redirect } from "next/navigation";
 
@@ -25,17 +24,17 @@ export const signupAction = async (value: AUTH_TYPES.REGISTER) => {
                 username: value.username,
                 email: value.email,
                 password: value.password,
+                profile:{
+                    create: {
+                      bio:'',
+                      image:'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'  
+                    }
+                }
             },
             select: {
                 id: true,
                 username: true,
                 email: true,
-            },
-        });
-
-        await prisma.profile.create({
-            data: {
-                userId: user.id,
             },
         });
 
@@ -172,4 +171,28 @@ export const updateUserPasswordAction=async(email: string, password: string) => 
         throw error;
     }
 
+}
+
+export const googlesigninAction = async () => {
+    try {
+       await signIn("google");
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const githubsigninAction = async () => {
+    try {
+       await signIn("github");
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const facebooksigninAction = async () => {
+    try {
+       await signIn("facebook");
+    } catch (error) {
+        throw error;
+    }
 }
