@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { sleep } from '@/lib/utils';
 import Loader from '../ui/Loader';
 import { useRouter } from 'next/navigation';
-import { validTokenForResetPassword } from '@/actions/auth.actions';
+import { updateUserPasswordAction, validTokenForResetPassword } from '@/actions/auth.actions';
 import { Key, Lock, Eye, EyeOff } from 'lucide-react';
 
 const passwordSchema = z.object({
@@ -23,6 +23,8 @@ const passwordSchema = z.object({
 
 const FormResetPassword = ({ token }: { token?: string }) => {
     const router = useRouter();
+    const [userEmail, setUserEmail] = useState('');
+
     const form = useForm<z.infer<typeof passwordSchema>>({
         resolver: zodResolver(passwordSchema),
         defaultValues: {
@@ -39,7 +41,8 @@ const FormResetPassword = ({ token }: { token?: string }) => {
         const validateToken = async () => {
             try {
                 if (token) {
-                    await validTokenForResetPassword(token);
+                    const result = await validTokenForResetPassword(token);
+                    setUserEmail(result);
                     toast.success('Token is valid.');
                 } else {
                     router.push('/forgot-password');
@@ -56,8 +59,10 @@ const FormResetPassword = ({ token }: { token?: string }) => {
     const onSubmit = async (data: z.infer<typeof passwordSchema>) => {
         try {
             await sleep();
-            // Simulate successful submission or handle reset password logic here
-            toast.success('Password reset successful.');
+            const res = await updateUserPasswordAction(userEmail, data.password);
+            toast.success(`Password ${res} account updated successfully!`);
+            form.reset();
+            router.push('/sign-in');
         } catch (error) {
             toast.error((error as Error).message);
         }

@@ -114,7 +114,7 @@ export const signinAction = async (value: AUTH_TYPES.LOGIN) => {
         await signIn('credentials', { 
             email: value.email,
             password: value.password,
-            redirectTo: '/'
+            redirectTo: `/profile/${user.id}`
         });
     } catch (error) {
       throw error;  
@@ -127,6 +127,9 @@ export const validTokenForResetPassword = async (token: string) => {
         const VerifyToken=await prisma.verificationToken.findUnique({
             where: {
                 token
+            },
+            select: {
+                email: true
             }
         })
         if(!VerifyToken) throw new Error('Token not found');
@@ -135,8 +138,38 @@ export const validTokenForResetPassword = async (token: string) => {
                 token:token.trim()
             }
         })
-        return true;
+        return VerifyToken.email;
     } catch (error) {
         throw error;
     }
+}
+
+export const updateUserPasswordAction=async(email: string, password: string) => {
+    try {
+        const isUser=await prisma.user.findUnique({
+            where: {
+                email
+            },
+            select:{
+                username:true
+            }
+        })
+
+        if(!isUser) throw new Error('User not found');
+        
+        password=await bcrypt.hash(password, 10);
+
+        await prisma.user.update({
+            where: {
+                email
+            },
+            data: { 
+                password
+            },
+        })
+        return isUser.username; 
+    } catch (error) {
+        throw error;
+    }
+
 }
