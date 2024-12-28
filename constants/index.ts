@@ -1,4 +1,4 @@
-import { facebooksigninAction, githubsigninAction, googlesigninAction } from "@/actions/auth.actions";
+import { githubsigninAction, googlesigninAction } from "@/actions/auth.actions";
 
 export const OAUTH=[
     {

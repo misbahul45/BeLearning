@@ -1,5 +1,5 @@
-import FormResetPassword from '@/components/features/FormResetPassword';
-import ResetVerify from '@/components/features/ResetVerify';
+import FormResetPassword from '@/components/auth/FormResetPassword';
+import ResetVerify from '@/components/auth/ResetVerify';
 import React from 'react';
 
 interface Props {

@@ -1,4 +1,4 @@
-import SignupForm from '@/components/features/SignupForm'
+import SignupForm from '@/components/auth/SignupForm'
 import Image from 'next/image'
 import React from 'react'
 

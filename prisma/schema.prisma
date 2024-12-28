@@ -12,6 +12,7 @@ model User {
   email    String   @unique
   username String   @unique
   password String
+  provider Provider @default(CREDENTIAL)
   profile  Profile?
 
   emailVerified DateTime?
@@ -22,6 +23,12 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+enum Provider {
+  GOOGLE
+  GITHUB
+  CREDENTIAL
 }
 
 model Profile {

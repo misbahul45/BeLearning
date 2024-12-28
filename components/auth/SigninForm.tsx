@@ -102,6 +102,9 @@ const SigninForm = () => {
             <p className='text-center text-sm'>
                 Don&apos;t have an account? <Link href="/sign-up" className='text-primary hover:text-blue hover:font-semibold hover:scale-105 transition-all duration-75'>Sign Up</Link>
             </p>
+            <p className='text-gray-400 text-xs'>
+                if <span className="text-red-500">error</span> occured, please signin/signup with different provider or try again
+            </p>
         </>
     )
 }

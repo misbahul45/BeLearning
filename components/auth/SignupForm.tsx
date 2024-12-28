@@ -135,7 +135,7 @@ const SignupForm = () => {
             </div>
             <div className='flex gap-4 mb-8 w-2/3 mx-auto justify-center'>
                 {OAUTH.map((item)=>(
-                    <OauthButton key={item.id} fn={()=>{}} icon={item.icon} />
+                    <OauthButton key={item.id} fn={item.fn} icon={item.icon} />
                 ))}
             </div>
         </Form>

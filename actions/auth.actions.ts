@@ -1,5 +1,5 @@
 'use server'
-import { signIn } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { AUTH_TYPES } from "@/types/auth.types";
 import * as bcrypt from 'bcryptjs';
@@ -189,10 +189,13 @@ export const githubsigninAction = async () => {
     }
 }
 
-export const facebooksigninAction = async () => {
+
+export const signoutAction = async () => {
     try {
-       await signIn("facebook");
+       await signOut({
+        redirectTo: '/sign-in'
+       });
     } catch (error) {
-        throw error;
+        if(error) throw error;
     }
 }

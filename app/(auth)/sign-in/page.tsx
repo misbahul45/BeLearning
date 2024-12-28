@@ -1,5 +1,5 @@
-import ShowFeedback from '@/components/features/ShowFeedback'
-import SigninForm from '@/components/features/SigninForm'
+import ShowFeedback from '@/components/auth/ShowFeedback'
+import SigninForm from '@/components/auth/SigninForm'
 
 import { PlusIcon } from 'lucide-react'
 import { Poppins } from 'next/font/google'

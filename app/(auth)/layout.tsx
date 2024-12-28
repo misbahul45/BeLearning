@@ -5,7 +5,7 @@ import React from 'react'
 const AuthLayout = async({ children }: { children: React.ReactNode }) => {
     const session=await auth()
     if(session){
-        return redirect('/browse')
+        return redirect('/browse?category=all')
     }else{
         return (
             <>{children}</>
