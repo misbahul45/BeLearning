@@ -35,7 +35,7 @@ const SigninForm = () => {
             await signinAction(data);
             form.reset();
         } catch (error) {
-            toast.error((error as Error).message);
+            if((error as Error).message !=='NEXT_REDIRECT') toast.error((error as Error).message);
         }
     }
 

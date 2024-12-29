@@ -6,37 +6,27 @@ import bcrypt from "bcryptjs";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
 
-interface User extends DefaultUser {
-  id: string;
+interface User {
+  email: string;
   role: string;
 }
 
 interface Session extends DefaultSession {
   user: {
-    id?: string;
     email?: string;
-    username?: string;
-    image?: string;
     role?: string;
   } & DefaultSession["user"];
 }
 
 interface JWT extends DefaultJWT {
   role?: string;
-  id?: string;
+  email?: string;
 }
 
 declare module "next-auth" {
-  interface User {
-    id?: string;
-    role: string;
-  }
   interface Session {
     user: {
-      id?: string;
       email?: string;
-      username?: string;
-      image?: string;
       role?: string;
     } & DefaultSession["user"];
   }
@@ -44,10 +34,11 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
+    email?: string;
     role?: string;
-    id?: string;
   }
 }
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -77,10 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           return {
-            id: user.id,
             email: user.email,
-            image: user.profile?.image,
-            username: user.username,
             role: user.profile?.role,
           } as User;
         } catch (error) {
@@ -97,25 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }): Promise<JWT> {
-      if (user) {
-        token.role = user.role;
-        token.id = user.id;
-        token.email = user.email;
-        token.image = user.image;
-      }
-      return token;
-    },
-    async session({ session, token }): Promise<Session> {
-      if (session.user) {
-        session.user.role = token.role as string;
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.image = token.image as string;
-      }
-      return session;
-    },
+  callbacks: {    
     async signIn({ account, profile }) {
       if (account?.provider) {
         let user;
@@ -150,7 +120,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 profile: {
                   create: {
                     bio: "",
-                    image,
+                    image:{
+                      create:{
+                        url:image
+                      }
+                    }
                   },
                 },
               },
@@ -187,7 +161,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 profile: {
                   create: {
                     bio: "",
-                    image: image as string,
+                    image: {
+                      create:{
+                        url:image as string
+                      }
+                    }
                   },
                 },
               },

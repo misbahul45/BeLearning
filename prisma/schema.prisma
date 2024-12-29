@@ -8,21 +8,20 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  email    String   @unique
-  username String   @unique
-  password String
-  provider Provider @default(CREDENTIAL)
-  profile  Profile?
-
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  username      String    @unique
+  password      String
+  provider      Provider  @default(CREDENTIAL)
+  profile       Profile?
   emailVerified DateTime?
-  accounts      Account[]
-  sessions      Session[]
+
+  courses Course[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("users")
+  @@map("data_users")
 }
 
 enum Provider {
@@ -31,60 +30,130 @@ enum Provider {
   CREDENTIAL
 }
 
+model Image {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  url    String
+  fileId String?
+
+  courseId String? @unique @db.ObjectId
+  course   Course? @relation(fields: [courseId], references: [id])
+
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId String?  @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_images")
+}
+
 model Profile {
   id     String  @id @default(auto()) @map("_id") @db.ObjectId
   user   User?   @relation(fields: [userId], references: [id])
   userId String  @unique @db.ObjectId
   bio    String?
-  image  String?
+  image  Image?
   role   Role    @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("profiles")
+  @@map("data_profiles")
 }
 
 enum Role {
   ADMIN
   USER
-}
-
-model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String   @db.ObjectId
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  TEACHER
 }
 
 model VerificationToken {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   email String
   token String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_verification_tokens")
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  courses   Course[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_categories_courses")
+}
+
+model Course {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  image       Image?
+  description String?
+  chapters    Chapter[]
+  resources   Resource[]
+  isPublished Boolean    @default(false)
+  price       Float      @default(0)
+  isFree      Boolean    @default(false)
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_courses")
+}
+
+model Resource {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  title String?
+  url   String?
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_resources_courses")
+}
+
+model Chapter {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  description String?
+  video       Video?
+  content     String?
+  ytUrl       String?
+
+  accessible Boolean @default(false)
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_chapters_courses")
+}
+
+model Video {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  url    String?
+  fileId String?
+
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapterId String  @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("data_videos_chapters")
 }

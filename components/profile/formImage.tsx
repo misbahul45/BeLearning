@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
@@ -8,35 +8,29 @@ import { CloudUploadIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { sleep } from '@/lib/utils';
 import Loader from '../ui/Loader';
 import { Button } from '../ui/button';
+import { USER_TYPES } from '@/types/user.types';
+
+
 
 interface FormImageProps {
-  userImage: string | null;
+  image:USER_TYPES.Image | null,
+  setImage: React.Dispatch<React.SetStateAction<USER_TYPES.Image | null>>;
 }
 
-interface ImageUpload {
-  url: string | null;
-  fileId: string;
-}
 
-const FormImage = ({ userImage }: FormImageProps) => {
+const FormImage = ({ image, setImage }: FormImageProps) => {
   const [loading, setLoading] = useState({
     type: '',
     status: false
   });
-  const [image, setImage] = useState<ImageUpload | null>({
-    url: userImage,
-    fileId: "",
-  });
+
 
   const handleRemoveImage = async () => {
     try {
       setLoading({ type: 'remove', status: true });
       await sleep();
-
       if (image?.fileId) await deleteImage(image.fileId);
-
       setImage(null);
-
       toast.success("Image removed successfully!");
     } catch (error) {
       toast.error((error as Error).message);
@@ -62,8 +56,7 @@ const FormImage = ({ userImage }: FormImageProps) => {
 
   return (
       <Card className="border-none">
-        <CardContent className="p-6">
-          <h3 className="text-xl font-bold mb-4 bg-gradient-to-r text-primary">Profile Avatar</h3>
+        <CardContent className="p-6 space-y-4">
           <div className="flex flex-col items-center space-y-4">
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 shadow-lg">
               {image?.url ? (

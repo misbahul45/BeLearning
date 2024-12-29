@@ -5,7 +5,9 @@ import { AUTH_TYPES } from "@/types/auth.types";
 import * as bcrypt from 'bcryptjs';
 import { redirect } from "next/navigation";
 
+
 export const signupAction = async (value: AUTH_TYPES.REGISTER) => {
+
     try {
         const isUserCreated = await prisma.user.count({
             where: {
@@ -27,7 +29,12 @@ export const signupAction = async (value: AUTH_TYPES.REGISTER) => {
                 profile:{
                     create: {
                       bio:'',
-                      image:'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'  
+                      image:{
+                        create:{
+                            url:'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
+                            fileId:''
+                        }
+                      }
                     }
                 }
             },
@@ -113,7 +120,7 @@ export const signinAction = async (value: AUTH_TYPES.LOGIN) => {
         await signIn('credentials', { 
             email: value.email,
             password: value.password,
-            redirectTo: `/profile/${user.id}`
+            redirectTo: `/browse?category=all`
         });
     } catch (error) {
       throw error;  

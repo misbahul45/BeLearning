@@ -29,12 +29,13 @@ export const uploadImage = async (file: File) => {
 
 export const deleteImage = async (fileId: string) => {
   try {
-    const response = await imageKit.deleteFile(fileId);
+    if(fileId){
+      const response = await imageKit.deleteFile(fileId);
 
-    if (!response) {
-      throw new Error("Failed to delete image");
+      if (!response) {
+        throw new Error("Failed to delete image");
+      }  
     }
-    
     return { success: true, message: "Image deleted successfully" };
   } catch (error) {
     throw error;

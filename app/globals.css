@@ -61,3 +61,14 @@
     color: rgba(0, 0, 0, 0.744);
   }
 }
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

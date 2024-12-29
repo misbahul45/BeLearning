@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { lazy } from "react";
+
+
+const Header = lazy(() => import('@/components/layout/Header'));
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <Header/>
           <Toaster position="top-center" />
           <NuqsAdapter>
             <div>
