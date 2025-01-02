@@ -21,7 +21,7 @@ const Header = ({ user }: Props) => {
     initial={{ opacity: 0, y: -50 }} 
     animate={{ opacity: 1, y: 0 }} 
     transition={{ duration: 1.5 }} 
-    className="fixed top-0 left-0 w-full z-50 flex justify-center">
+    className="fixed backdrop-blur-sm top-0 left-0 w-full z-50 flex justify-center">
       <nav className="relative flex gap-3 mx-auto mt-4 rounded-lg border bg-white/80 backdrop-blur-sm p-1 shadow-sm">
         {HEADER_LIST.map((item) => (
           <Link

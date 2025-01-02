@@ -8,16 +8,21 @@ import FormImage from './FormImage'
 import { Image } from '@/types/user.types'
 import FormTag from './FormTag'
 import { Label } from '@/components/ui/label'
+import dynamic from 'next/dynamic'
+
+
+const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
 
 const FormArticle = () => {
   const [image, setImage] = React.useState<Image| null>({
     url: '',
     fileId:'',
   });
-
   const [tags, setTags] = React.useState<string[]>([]);
+  const [content, setContent] = React.useState<string | null>(null);
 
 
+  console.log(content)
 
   return (
     <Card className='md:mt-8 sm:mt-4 mt-2'>
@@ -48,7 +53,7 @@ const FormArticle = () => {
                 <FormTag tags={tags} setTags={setTags} />
                 <div className='space-y-2'>
                     <Label className='font-semibold'>Content</Label>
-                    <textarea cols={30} rows={10} className='py-4 w-full'></textarea>
+                    <Editor initialContent={content} onChange={(content: string) => setContent(content)} />
                 </div>  
                 <Button className='w-full' type='button'>Publish Article</Button>
             </form>
