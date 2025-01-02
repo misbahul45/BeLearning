@@ -1,5 +1,4 @@
 "use client";
-
 import { SIDE_LIST } from '@/constants/layout';
 import Image from 'next/image';
 import Link from 'next/link';

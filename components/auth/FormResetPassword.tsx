@@ -54,7 +54,7 @@ const FormResetPassword = ({ token }: { token?: string }) => {
             }
         };
         validateToken();
-    }, [token]);
+    }, [router, token]);
 
     const onSubmit = async (data: z.infer<typeof passwordSchema>) => {
         try {

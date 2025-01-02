@@ -30,7 +30,6 @@ enum ROLE {
     TEACHER = 'TEACHER',
 }
 
-export namespace USER_TYPES {
     export type UPDATE_USER = {
         username?: string;
         bio?: string;
@@ -42,4 +41,3 @@ export namespace USER_TYPES {
         url: string;
         fileId: string;
     }
-}

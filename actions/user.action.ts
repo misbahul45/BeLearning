@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from "@/lib/prisma";
-import { USER, USER_TYPES } from "@/types/user.types";
+import { UPDATE_USER, USER } from "@/types/user.types";
 
 interface getValueUser {
   id?: boolean;
@@ -54,7 +54,7 @@ export const getUserAction = async (
 
 
 
-export const updateUserAction = async (data: USER_TYPES.UPDATE_USER) => {
+export const updateUserAction = async (data: UPDATE_USER) => {
   try {
     const isUser = await prisma.user.count({
       where: {

@@ -1,26 +1,14 @@
-import NextAuth, { DefaultSession, User as DefaultUser } from "next-auth";
-import { JWT as DefaultJWT } from "next-auth/jwt";
+import NextAuth, { DefaultSession, User} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "./prisma";
 import bcrypt from "bcryptjs";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
 
-interface User {
-  email: string;
-  role: string;
-}
-
-interface Session extends DefaultSession {
-  user: {
-    email?: string;
-    role?: string;
-  } & DefaultSession["user"];
-}
-
-interface JWT extends DefaultJWT {
-  role?: string;
-  email?: string;
+enum Provider {
+  GOOGLE = "GOOGLE",
+  GITHUB = "GITHUB",
+  CREDENTIALS = "CREDENTIALS"
 }
 
 declare module "next-auth" {
@@ -31,14 +19,6 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 }
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    email?: string;
-    role?: string;
-  }
-}
-
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -54,24 +34,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             include: { profile: true },
           });
 
-          if (!user) {
-            return null;
-          }
+          if (!user) return null;
 
           const isValid = await bcrypt.compare(
             credentials?.password as string,
             user.password as string
           );
 
-          if (!isValid) {
-            return null;
-          }
+          if (!isValid) return null;
 
           return {
             email: user.email,
             role: user.profile?.role,
           } as User;
         } catch (error) {
+          console.error(error);
           throw new Error("An error occurred during authentication. Please try again.");
         }
       },
@@ -87,94 +64,67 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {    
     async signIn({ account, profile }) {
-      if (account?.provider) {
-        let user;
+      if (!account?.provider) return false;
 
-        if (account.provider === "google") {
-          const email = profile?.email as string;
-          const username = profile?.name as string;
-          const image =
-            profile?.picture as string ||
-            "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
-          user = await prisma.user.findFirst({
-            where: {
-              AND: [
-                {
-                  email,
-                },
-                {
-                  provider: "GOOGLE",
-                },
-              ],
-            },
-          });
-          if (!user) {
-            const password = await bcrypt.hash(email, 10);
-            user = await prisma.user.create({
-              data: {
-                email,
-                username: username.replace(/\s+/g, "").toLowerCase(),
-                password,
-                emailVerified: new Date(),
-                provider: "GOOGLE",
-                profile: {
-                  create: {
-                    bio: "",
-                    image:{
-                      create:{
-                        url:image
-                      }
-                    }
-                  },
-                },
+      const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
+
+      if (account.provider === "google") {
+        const email = profile?.email as string;
+        const username = (profile?.name as string).replace(/\s+/g, "").toLowerCase();
+        const image = profile?.picture as string || defaultImage;
+        const password = await bcrypt.hash(email, 10);
+
+        await prisma.user.upsert({
+          where: { email },
+          create: {
+            email,
+            username,
+            password,
+            emailVerified: new Date(),
+            provider: Provider.GOOGLE,
+            profile: {
+              create: {
+                bio: "",
+                image: {
+                  create: { url: image }
+                }
               },
-            });
-          }
-          return true;
-        } else if (account.provider === "github") {
-          const email = profile?.email || account?.email || "unknown@github.com";
-          const username = profile?.login || "unknown_user";
-          const image =
-            profile?.avatar_url ||
-            "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
-          user = await prisma.user.findFirst({
-            where: {
-              AND: [
-                {
-                  email: email as string,
-                },
-                {
-                  provider: "GITHUB",
-                },
-              ],
             },
-          });
-          if (!user) {
-            const password = await bcrypt.hash(email as string, 10);
-            user = await prisma.user.create({
-              data: {
-                email: email as string,
-                username : (username as string).replace(/\s+/g, "").toLowerCase(),
-                password,
-                emailVerified: new Date(),
-                provider: "GITHUB",
-                profile: {
-                  create: {
-                    bio: "",
-                    image: {
-                      create:{
-                        url:image as string
-                      }
-                    }
-                  },
-                },
-              },
-            });
-          }
-          return true;
-        }
+          },
+          update: { provider: Provider.GOOGLE }
+        });
+
         return true;
       }
+
+      if (account.provider === "github") {
+        const email = profile?.email || account?.email || "unknown@github.com";
+        const username = profile?.login || "unknown_user";
+        const imageProfile = (profile?.avatar_url as string) || defaultImage;
+        const password = await bcrypt.hash(email as string, 10);
+
+        await prisma.user.upsert({
+          where: { email: email as string },
+          create: {
+            email: email as string,
+            username: username as string,
+            password,
+            emailVerified: new Date(),
+            provider: Provider.GITHUB,
+            profile: {
+              create: {
+                image: {
+                  create: { url: imageProfile},
+                },
+              },
+            },
+          },
+          update: { provider: Provider.GITHUB }
+        });
+
+        return true;
+      }
+
       return false;
     },
   },

@@ -10,19 +10,18 @@ import {
 } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { Input } from '../ui/input';
-import { AtSign, Key, Lock, UserRound, Eye, EyeOff } from 'lucide-react';
+import { AtSign, UserRound } from 'lucide-react';
 import Loader from '../ui/Loader';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { Separator } from '../ui/separator';
-import FormImage from './FormImage';
+import FormImage from './formImage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserValidation } from '@/validations/user.validation';
 import { z } from 'zod';
-import { USER, USER_TYPES } from '@/types/user.types';
+import { Image, USER } from '@/types/user.types';
 import { sleep } from '@/lib/utils';
 import { updateUserAction } from '@/actions/user.action';
-import { AUTH_TYPES } from '@/types/auth.types';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
@@ -33,7 +32,7 @@ interface Props {
 const EditUser = ({ user }: Props) => {
   const router=useRouter()
 
-  const [image, setImage] = React.useState<USER_TYPES.Image| null>({
+  const [image, setImage] = React.useState<Image| null>({
     url: user.profile?.image?.url || '',
     fileId: user.profile?.image?.fileId || '',
   });

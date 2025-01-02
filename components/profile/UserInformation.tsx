@@ -12,7 +12,7 @@ const UserInformation = async () => {
   let user;
 
   try {
-    user=await getUserAction(session?.user.email!, {image: true, bio: true, username: true, email: true});
+    user=await getUserAction(session?.user.email || '', {image: true, bio: true, username: true, email: true});
 
     if(!user) throw new Error('User not found');
     

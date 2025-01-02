@@ -1,50 +1,59 @@
 'use server'
 import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { AUTH_TYPES } from "@/types/auth.types";
+import { LOGIN, REGISTER } from "@/types/auth.types";
 import * as bcrypt from 'bcryptjs';
 import { redirect } from "next/navigation";
 
 
-export const signupAction = async (value: AUTH_TYPES.REGISTER) => {
-
+export const signupAction = async (value: REGISTER) => {
     try {
-        const isUserCreated = await prisma.user.count({
-            where: {
-                email: value.email,
-            }
-        });
-
-        if (isUserCreated > 0) {
-            throw new Error('User already exists, please login');
-        }
-
+       
         value.password = await bcrypt.hash(value.password, 10);
 
-        const user = await prisma.user.create({
-            data: {
-                username: value.username,
-                email: value.email,
-                password: value.password,
-                profile:{
+        const user = await prisma.user.upsert({
+            where: {
+              email: value.email
+            },
+            create: {
+              username: value.username,
+              email: value.email,
+              password: value.password,
+              profile: {
+                create: {
+                  bio: '',
+                  image: {
                     create: {
-                      bio:'',
-                      image:{
-                        create:{
-                            url:'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
-                            fileId:''
-                        }
-                      }
+                      url: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
+                      fileId: ''
                     }
+                  }
                 }
+              }
+            },
+            update: {
+              username: value.username,
+              email: value.email,
+              password: value.password,
+              profile: {
+                update: {
+                  bio: '',
+                  image: {
+                    update: {
+                      url: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
+                      fileId: ''
+                    }
+                  }
+                }
+              }
             },
             select: {
-                id: true,
-                username: true,
-                email: true,
+              id: true,
+              username: true,
+              email: true,
             },
-        });
-
+          });
+          
         if (!user) throw new Error('User not created');
 
        return user
@@ -84,7 +93,7 @@ export const checkVerificationToken = async (token: string) => {
 
         if(!verifyToken) throw new Error('Token not found');
 
-        const user=await prisma.user.update({
+        await prisma.user.update({
             where: {
                 email: VerifyToken?.email
             },
@@ -101,7 +110,7 @@ export const checkVerificationToken = async (token: string) => {
     }
 }
 
-export const signinAction = async (value: AUTH_TYPES.LOGIN) => {
+export const signinAction = async (value: LOGIN) => {
     try {
         const user=await prisma.user.findUnique({
             where:{

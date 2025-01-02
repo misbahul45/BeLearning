@@ -7,6 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Etentity User 
+
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   email         String    @unique
@@ -20,8 +22,6 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_users")
 }
 
 enum Provider {
@@ -35,16 +35,11 @@ model Image {
   url    String
   fileId String?
 
-  courseId String? @unique @db.ObjectId
-  course   Course? @relation(fields: [courseId], references: [id])
-
   profile   Profile? @relation(fields: [profileId], references: [id])
   profileId String?  @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_images")
 }
 
 model Profile {
@@ -57,8 +52,6 @@ model Profile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_profiles")
 }
 
 enum Role {
@@ -74,24 +67,12 @@ model VerificationToken {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_verification_tokens")
 }
 
-model Category {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  courses   Course[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("data_categories_courses")
-}
-
+//Entity Course
 model Course {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   title       String?
-  image       Image?
   description String?
   chapters    Chapter[]
   resources   Resource[]
@@ -107,8 +88,14 @@ model Course {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  @@map("data_courses")
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  courses   Course[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Resource {
@@ -121,8 +108,6 @@ model Resource {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_resources_courses")
 }
 
 model Chapter {
@@ -135,13 +120,11 @@ model Chapter {
 
   accessible Boolean @default(false)
 
-  course   Course @relation(fields: [courseId], references: [id])
-  courseId String @db.ObjectId
+  course   Course? @relation(fields: [courseId], references: [id])
+  courseId String? @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_chapters_courses")
 }
 
 model Video {
@@ -154,6 +137,4 @@ model Video {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("data_videos_chapters")
 }

@@ -10,17 +10,17 @@ import { Input } from '../ui/input'
 import { AtSign, Lock } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AUTH_VALIDATION } from '@/validations/auth.validation'
-import { AUTH_TYPES } from '@/types/auth.types'
 import Link from 'next/link'
 import Loader from '../ui/Loader'
 import toast from 'react-hot-toast'
 import { sleep } from '@/lib/utils'
 import { signinAction } from '@/actions/auth.actions'
+import { LOGIN } from '@/types/auth.types'
 
 const SigninForm = () => {
     const searchParams = useSearchParams()
 
-    const form = useForm<AUTH_TYPES.LOGIN>({
+    const form = useForm<LOGIN>({
         resolver: zodResolver(AUTH_VALIDATION.LOGIN),
         defaultValues: {
             email: '',
@@ -29,7 +29,7 @@ const SigninForm = () => {
         mode: 'onChange'
     })
 
-    const onSubmit = async (data: AUTH_TYPES.LOGIN) => {
+    const onSubmit = async (data: LOGIN) => {
         try {
             await sleep()
             await signinAction(data);

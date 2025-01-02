@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
@@ -8,13 +8,13 @@ import { CloudUploadIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { sleep } from '@/lib/utils';
 import Loader from '../ui/Loader';
 import { Button } from '../ui/button';
-import { USER_TYPES } from '@/types/user.types';
+import { Image as TypeImage } from '@/types/user.types';
 
 
 
 interface FormImageProps {
-  image:USER_TYPES.Image | null,
-  setImage: React.Dispatch<React.SetStateAction<USER_TYPES.Image | null>>;
+  image:TypeImage | null,
+  setImage: React.Dispatch<React.SetStateAction<TypeImage | null>>;
 }
 
 

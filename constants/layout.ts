@@ -42,8 +42,8 @@ export const HEADER_LIST=[
     },
     {
         id:``,
-        name:'Articles',
-        path:'/articles'
+        name:'Article',
+        path:'/article'
     },
     {
         id:1,

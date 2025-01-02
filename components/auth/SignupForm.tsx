@@ -9,17 +9,17 @@ import { Input } from '../ui/input'
 import { AtSign, Key, Lock, UserRound } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AUTH_VALIDATION } from '@/validations/auth.validation'
-import { AUTH_TYPES } from '@/types/auth.types'
 import Link from 'next/link'
 import { signupAction } from '@/actions/auth.actions'
 import { sleep } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import Loader from '../ui/Loader'
+import { REGISTER } from '@/types/auth.types'
 
 const SignupForm = () => {
     const router=useRouter()
-    const form=useForm<AUTH_TYPES.REGISTER>({
+    const form=useForm<REGISTER>({
         resolver:zodResolver(AUTH_VALIDATION.REGISTER),
         defaultValues: {
             username:'',
@@ -30,7 +30,7 @@ const SignupForm = () => {
         mode:'onChange'
     })
 
-    const onSubmit=async(data:AUTH_TYPES.REGISTER)=>{
+    const onSubmit=async(data:REGISTER)=>{
         try {
             await sleep()
             const user=await signupAction(data);
