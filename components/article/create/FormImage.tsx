@@ -9,6 +9,7 @@ import { sleep } from '@/lib/utils';
 import Loader from '@/components/ui/Loader';
 import { Button } from '@/components/ui/button';
 import { Image as TypeImage } from '@/types/user.types';
+import WEB_VALIDATION from '@/validations/web.validation';
 
 
 
@@ -44,7 +45,10 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
       const res = await uploadImage(file);
       if (res?.url) {
         toast.success("Image uploaded successfully!");
-        setImage(res);
+        const imageURL=WEB_VALIDATION.URL.safeParse({url:res.url})
+        if(imageURL.success){
+          setImage(res);
+        }
       } else {
         toast.error("Image upload failed.");
       }
