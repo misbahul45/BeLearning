@@ -2,7 +2,7 @@
 import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { LOGIN, REGISTER } from "@/types/auth.types";
-import * as bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { redirect } from "next/navigation";
 
 
@@ -109,33 +109,32 @@ export const checkVerificationToken = async (token: string) => {
         throw error;
     }
 }
-
 export const signinAction = async (value: LOGIN) => {
     try {
-        const user=await prisma.user.findUnique({
-            where:{
-                email: value.email
-            }
-        })
+        const user = await prisma.user.findUnique({
+            where: {
+                email: value.email,
+            },
+        });
 
-        if(!user) throw new Error('User not found');
-        if(!user.emailVerified) {
-            redirect('/verify-email')
+        if (!user) throw new Error('User not found');
+        if (!user.emailVerified) {
+            redirect('/verify-email');
         }
 
         const isMatch = await bcrypt.compare(value.password, user.password as string);
         if (!isMatch) throw new Error('Invalid password');
 
-        await signIn('credentials', { 
+        await signIn('credentials', {
             email: value.email,
             password: value.password,
-            redirectTo: `/browse?category=all`
+            callbackUrl: '/browse?category=all',
         });
-    } catch (error) {
-      throw error;  
-    }
-}
 
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const validTokenForResetPassword = async (token: string) => {
     try {

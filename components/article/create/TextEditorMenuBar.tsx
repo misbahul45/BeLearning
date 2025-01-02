@@ -1,4 +1,4 @@
-import { Bold, Italic, Strikethrough, Code, ListOrdered, Redo, Undo, Underline, List } from "lucide-react";
+import { Bold, Italic, Strikethrough, Code, ListOrdered, Redo, Undo, Underline, List, Heading1, Heading2 } from "lucide-react";
 import { Editor } from "@tiptap/react";
 
   const Button = ({
@@ -16,7 +16,7 @@ import { Editor } from "@tiptap/react";
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`p-2 ${isActive ? "bg-violet-500 text-white rounded-md" : ""}`}
+      className={`p-2 ${isActive ? "bg-violet-500 text-white" : "hover:bg-violet-200"} focus:outline-none rounded`}
     >
       {children}
     </button>
@@ -30,6 +30,16 @@ import { Editor } from "@tiptap/react";
     if (!editor) return null;
   
     const buttons = [
+      {
+       icon: <Heading1 className="size-5" />,
+         onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+         isActive: editor.isActive("heading", { level: 1 }), 
+      },
+      {
+        icon: <Heading2 className="size-5" />,
+        onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+        isActive: editor.isActive("heading", { level: 2 }),
+      },
       {
         icon: <Bold className="size-5" />,
         onClick: () => editor.chain().focus().toggleBold().run(),
@@ -84,7 +94,7 @@ import { Editor } from "@tiptap/react";
     ];
   
     return (
-      <div className="mb-2 flex gap-2 flex-wrap sm:justify-start justify-center">
+      <div className="mb-2 flex gap-2 flex-wrap sm:justify-start justify-center border-2 border-primary p-0.5 rounded">
         {buttons.map(({ icon, onClick, isActive, disabled }, index) => (
           <Button
             key={index}

@@ -34,22 +34,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             include: { profile: true },
           });
 
-          if (!user) return null;
-
-          const isValid = await bcrypt.compare(
-            credentials?.password as string,
-            user.password as string
-          );
-
-          if (!isValid) return null;
-
           return {
-            email: user.email,
-            role: user.profile?.role,
+            email: user?.email,
+            role: user?.profile?.role,
           } as User;
         } catch (error) {
-          console.error(error);
-          throw new Error("An error occurred during authentication. Please try again.");
+          throw error;
         }
       },
     }),
@@ -64,11 +54,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {    
     async signIn({ account, profile }) {
-      if (!account?.provider) return false;
-
       const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
 
-      if (account.provider === "google") {
+      if (account?.provider === "google") {
         const email = profile?.email as string;
         const username = (profile?.name as string).replace(/\s+/g, "").toLowerCase();
         const image = profile?.picture as string || defaultImage;
@@ -97,7 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return true;
       }
 
-      if (account.provider === "github") {
+      if (account?.provider === "github") {
         const email = profile?.email || account?.email || "unknown@github.com";
         const username = profile?.login || "unknown_user";
         const imageProfile = (profile?.avatar_url as string) || defaultImage;
@@ -125,7 +113,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return true;
       }
 
-      return false;
+      return true;
     },
   },
   session: {
