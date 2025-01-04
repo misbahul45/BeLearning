@@ -1,5 +1,7 @@
-import { Bold, Italic, Strikethrough, Code, ListOrdered, Redo, Undo, Underline, List, Heading1, Heading2 } from "lucide-react";
+import { Bold, Italic, Strikethrough, CodeSquare ,ListOrdered, Redo, Undo, Underline, List, Heading1, Heading2 } from "lucide-react";
 import { Editor } from "@tiptap/react";
+import URLDialog from "./URLDialog";
+import React from "react";
 
   const Button = ({
     onClick,
@@ -27,8 +29,10 @@ import { Editor } from "@tiptap/react";
   }: {
     editor: Editor | null;
   }) {
+
+    const [link, setLink] = React.useState("");
+
     if (!editor) return null;
-  
     const buttons = [
       {
        icon: <Heading1 className="size-5" />,
@@ -63,7 +67,7 @@ import { Editor } from "@tiptap/react";
         disabled: !editor.can().chain().focus().toggleStrike().run(),
       },
       {
-        icon: <Code className="size-5" />,
+        icon: <CodeSquare className="size-5" />,
         onClick: () => editor.chain().focus().toggleCodeBlock().run(),
         isActive: editor.isActive("codeBlock"),
         disabled: !editor.can().chain().focus().toggleCodeBlock().run(),
@@ -80,6 +84,16 @@ import { Editor } from "@tiptap/react";
         disabled: !editor.can().chain().focus().toggleOrderedList().run(),
       },
       {
+        icon:<URLDialog link={link} setLik={setLink} />,
+        onClick: () => {
+          if (link) {
+            editor.chain().focus().extendMarkRange("link").setLink({ href: link }).run();
+            setLink("");
+          }
+        },
+        isActive: editor.isActive("link"),
+      },
+      {
         icon: <Undo className="size-5" />,
         onClick: () => editor.chain().focus().undo().run(),
         isActive: editor.isActive("undo"),
@@ -94,7 +108,7 @@ import { Editor } from "@tiptap/react";
     ];
   
     return (
-      <div className="mb-2 flex gap-2 flex-wrap sm:justify-start justify-center border-2 border-primary p-0.5 rounded">
+      <div className="mb-2 flex gap-2 flex-wrap sm:justify-start justify-center ">
         {buttons.map(({ icon, onClick, isActive, disabled }, index) => (
           <Button
             key={index}

@@ -25,7 +25,11 @@ export const getUserAction = async (
         id: getValue.id ?? false,
         username: getValue.username ?? false,
         email: getValue.email ?? false,
-        emailVerified: getValue.email ?? false,
+        verification:{
+          select:{
+            isVerified:true
+          }
+        },
         profile: getValue.bio || getValue.image || getValue.role ? {
           select: {
             bio: getValue.bio ?? false,

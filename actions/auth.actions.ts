@@ -79,31 +79,25 @@ export const checkVerificationToken = async (token: string) => {
                 email: VerifyToken?.email
             },
             select: {
-                emailVerified: true
+                verification:{
+                    select:{
+                        isVerified:true
+                    }
+                }
             }
         })
 
-        if(isverifed?.emailVerified) redirect('/');
-
-        const verifyToken=await prisma.verificationToken.delete({
-            where:{
+        if(isverifed?.verification?.isVerified) redirect('/browse?category=all');
+        const verifyToken=await prisma.verificationToken.update({
+            where: {
                 token
+            },
+            data:{
+                isVerified:true
             }
         })
-
         if(!verifyToken) throw new Error('Token not found');
 
-        await prisma.user.update({
-            where: {
-                email: VerifyToken?.email
-            },
-            data: {
-             emailVerified: new Date(),   
-            },
-            select:{
-                id:true
-            }
-        })
         redirect('/sign-in')
     } catch (error) {
         throw error;
@@ -115,10 +109,19 @@ export const signinAction = async (value: LOGIN) => {
             where: {
                 email: value.email,
             },
+            select: {
+                email: true,
+                password: true,
+                verification:{
+                    select:{
+                        isVerified:true
+                    }
+                }
+            }
         });
 
         if (!user) throw new Error('User not found');
-        if (!user.emailVerified) {
+        if (!user?.verification?.isVerified) {
             redirect('/verify-email');
         }
 
@@ -147,9 +150,12 @@ export const validTokenForResetPassword = async (token: string) => {
             }
         })
         if(!VerifyToken) throw new Error('Token not found');
-        await prisma.verificationToken.delete({
+        await prisma.verificationToken.update({
             where: {
                 token:token.trim()
+            },
+            data:{
+                isVerified:true
             }
         })
         return VerifyToken.email;

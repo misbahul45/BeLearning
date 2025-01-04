@@ -1,3 +1,5 @@
+import { Image } from "./web.types";
+
 interface PROFILE {
     bio?: string;
     image: {
@@ -37,7 +39,4 @@ enum ROLE {
         email: string;
     };
 
-    export type Image={
-        url: string;
-        fileId: string;
-    }
+

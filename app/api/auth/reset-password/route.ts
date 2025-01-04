@@ -23,12 +23,15 @@ export async function POST(req:NextRequest) {
     const token=generateToken();
 
     //save tken in database
-    await prisma.verificationToken.create({
-        data: {
-            token,
+    await prisma.verificationToken.update({
+        where:{
             email
+        },
+        data:{
+            token:token,
         }
     })
+      
     const templateParams = {
         to_email: email,
         token,

@@ -10,13 +10,17 @@ datasource db {
 //Etentity User 
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  email         String    @unique
-  username      String    @unique
-  password      String
-  provider      Provider  @default(CREDENTIAL)
-  profile       Profile?
-  emailVerified DateTime?
+  id               String              @id @default(auto()) @map("_id") @db.ObjectId
+  email            String              @unique
+  username         String              @unique
+  password         String
+  provider         Provider            @default(CREDENTIAL)
+  profile          Profile?
+  verification     VerificationToken?
+  articles         Article[]
+  commentsArticles ArticleComments[]
+  likeArticles     ArticleLike[]
+  saveArticles     ArticleSaveByUser[]
 
   courses Course[]
 
@@ -62,11 +66,113 @@ enum Role {
 
 model VerificationToken {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String
+  user  User   @relation(fields: [email], references: [email])
+  email String @unique
   token String @unique
+
+  isVerified Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+//etentity article
+
+model Cover {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  url    String
+  fileId String
+
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String  @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Article {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  slug      String        @unique
+  cover     Cover?
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  String        @db.ObjectId
+  status    ArticleStatus @default(DRAFT)
+  viewCount Int           @default(0)
+
+  tags     TagsArticle[]
+  comments ArticleComments[]
+  likes    ArticleLike[]
+  saves    ArticleSaveByUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  APPROVED
+}
+
+model Tag {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  tag       String        @unique
+  articles  TagsArticle[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model TagsArticle {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String  @db.ObjectId
+  tags      Tag     @relation(fields: [tagId], references: [id])
+  tagId     String  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([articleId, tagId])
+}
+
+model ArticleComments {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([articleId, userId])
+}
+
+model ArticleLike {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String  @db.ObjectId
+  UserLike  User    @relation(fields: [likedBy], references: [id])
+  likedBy   String  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([articleId, likedBy])
+}
+
+model ArticleSaveByUser {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([articleId, userId])
 }
 
 //Entity Course

@@ -1,10 +1,21 @@
 import FormArticle from '@/components/article/create/FormArticle'
 import { Button } from '@/components/ui/button'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/prisma'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-const page = () => {
+const page = async() => {
+    const session=await auth()
+    const author=await prisma.user.findUnique({
+        where:{
+           email:session?.user.email
+        },
+        select:{
+            id:true
+        }
+    })
   return (
     <div className='w-full py-20 md:px-4'>
         <div className='w-full max-w-6xl relative mx-auto h-full flex-1 rounded md:p-8 p-2'>
@@ -16,7 +27,7 @@ const page = () => {
                 </Link>
                 <h1 className='font-bold md:text-3xl text-2xl'>Create Article</h1>
             </div>
-            <FormArticle />
+            <FormArticle authorId={author?.id || ''} />
         </div>
     </div>
   )

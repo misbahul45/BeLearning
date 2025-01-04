@@ -61,6 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const username = (profile?.name as string).replace(/\s+/g, "").toLowerCase();
         const image = profile?.picture as string || defaultImage;
         const password = await bcrypt.hash(email, 10);
+        const token=await bcrypt.hash(email+""+Date.now(), 10);
 
         await prisma.user.upsert({
           where: { email },
@@ -68,7 +69,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email,
             username,
             password,
-            emailVerified: new Date(),
+           verification:{
+              create:{
+                token,
+                isVerified:true
+              }
+           },
             provider: Provider.GOOGLE,
             profile: {
               create: {
@@ -90,14 +96,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const username = profile?.login || "unknown_user";
         const imageProfile = (profile?.avatar_url as string) || defaultImage;
         const password = await bcrypt.hash(email as string, 10);
-
+        const token=await bcrypt.hash(email+""+Date.now(), 10);
         await prisma.user.upsert({
           where: { email: email as string },
           create: {
             email: email as string,
             username: username as string,
             password,
-            emailVerified: new Date(),
+            verification:{
+              create:{
+                token,
+                isVerified:true
+              }
+            },
             provider: Provider.GITHUB,
             profile: {
               create: {

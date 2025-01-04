@@ -6,6 +6,7 @@ import { Heading } from "@/lib/tiptap";
 import OrderedList from "@tiptap/extension-ordered-list";
 import BulletList from "@tiptap/extension-bullet-list";
 import CodeBlock from "@tiptap/extension-code-block";
+import Link from "@tiptap/extension-link";
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -37,9 +38,15 @@ export default function RichTextEditor({
               exitOnArrowDown: true,
               defaultLanguage: "plaintext",
               HTMLAttributes: {
-                class: "rounded-md p-4 bg-slate-700 text-white"
+                class: "rounded-md p-4 bg-slate-700 text-cyan-300"
               }
-            })
+            }),
+            Link.configure({
+              openOnClick: false,
+              HTMLAttributes: {
+                class: "text-primary underline italic hover:scale-105"
+              }
+            }),
         ],
         content: initialContent,
         onUpdate: ({ editor }) => {
