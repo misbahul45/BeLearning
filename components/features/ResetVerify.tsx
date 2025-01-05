@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription } from '@/components/ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import Loader from '../ui/Loader'; 
+import Loader from '../Loaders/Loader'; 
 import { sleep } from '@/lib/utils';
 import toast from 'react-hot-toast';
 

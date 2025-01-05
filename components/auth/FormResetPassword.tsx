@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sleep } from '@/lib/utils';
-import Loader from '../ui/Loader';
+import Loader from '../Loaders/Loader';
 import { useRouter } from 'next/navigation';
 import { updateUserPasswordAction, validTokenForResetPassword } from '@/actions/auth.actions';
 import { Key, Lock, Eye, EyeOff } from 'lucide-react';

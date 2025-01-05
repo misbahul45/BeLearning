@@ -6,16 +6,16 @@ import { toast } from 'react-hot-toast';
 import { deleteImage, uploadImage } from '@/actions/web.action';
 import { CloudUploadIcon, ImageUpIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { sleep } from '@/lib/utils';
-import Loader from '@/components/ui/Loader';
+import Loader from '@/components/Loaders/Loader';
 import { Button } from '@/components/ui/button';
-import { Image as TypeImage } from '@/types/user.types';
+import { Image as TypeImage } from '@/types/web.types';
 import WEB_VALIDATION from '@/validations/web.validation';
 
 
 
 interface FormImageProps {
   image: TypeImage | null,
-  setImage: React.Dispatch<React.SetStateAction<TypeImage | null>>;
+  setImage: React.Dispatch<React.SetStateAction<TypeImage>>;
 }
 
 
@@ -31,7 +31,10 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
       setLoading({ type: 'remove', status: true });
       await sleep();
       if (image?.fileId) await deleteImage(image.fileId);
-      setImage(null);
+      setImage({
+        url: '',
+        fileId: ''
+      });
       toast.success("Image removed successfully!");
     } catch (error) {
       toast.error((error as Error).message);

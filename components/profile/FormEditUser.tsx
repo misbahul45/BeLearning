@@ -11,7 +11,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { Input } from '../ui/input';
 import { AtSign, UserRound } from 'lucide-react';
-import Loader from '../ui/Loader';
+import Loader from '../Loaders/Loader';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { Separator } from '../ui/separator';

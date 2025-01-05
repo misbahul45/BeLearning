@@ -15,7 +15,7 @@ import { signupAction } from '@/actions/auth.actions'
 import { sleep } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import Loader from '../ui/Loader'
+import Loader from '../Loaders/Loader'
 
 const SignupForm = () => {
     const router=useRouter()

@@ -2,7 +2,7 @@
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-const HomeWrapper = ({ children }: { children: React.ReactNode }) => {
+const Wrapper = ({ children }: { children: React.ReactNode }) => {
   const [scrollbar, setScrollbar] = useState(0);
   const pathName=usePathname()
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,4 +41,4 @@ const HomeWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default HomeWrapper;
+export default Wrapper;

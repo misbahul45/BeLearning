@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic'
 import { createArticleAction } from '@/actions/article.action'
 import toast from 'react-hot-toast'
 import { slugify } from '@/lib/utils'
-import Loader from '@/components/ui/Loader'
+import Loader from '@/components/Loaders/Loader'
 
 
 const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
@@ -20,7 +20,7 @@ const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
 const FormArticle = ({ authorId }: { authorId: string }) => { 
   const [image, setImage] = React.useState<Image>({
     url: '',
-    fileId:'',
+    fileId: '',
   });
   const [title, setTitle] = React.useState<string>('');
   const [slug, setSlug] = React.useState<string>('');

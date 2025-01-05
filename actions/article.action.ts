@@ -1,7 +1,9 @@
 'use server'
 import prisma from "@/lib/prisma";
+import { sleep } from "@/lib/utils";
 import { CREATE_ARTICLE } from "@/types/article.types";
 import { ARTICLE_VALIDATION } from "@/validations/article.validation";
+import { revalidatePath } from "next/cache";
 
 export const createArticleAction = async (values: CREATE_ARTICLE) => {
     try {
@@ -38,7 +40,24 @@ export const createArticleAction = async (values: CREATE_ARTICLE) => {
             },
         });
 
+        revalidatePath('/dashboard');
+
         return article;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const getAriclesAction = async () => {
+    try {
+        const articles = await prisma.article.findMany({
+            where:{
+                status:'PUBLISHED'
+            }
+        });
+        await sleep()
+        return articles;
     } catch (error) {
         throw error;
     }

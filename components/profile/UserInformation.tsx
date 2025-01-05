@@ -23,7 +23,7 @@ const UserInformation = async () => {
 
   return (
     <div className="w-full p-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-lg shadow-lg text-white relative">
-      <div className="flex  flex-col items-center md:gap-3 gap-2">
+      <div className="flex flex-col items-center md:gap-3 gap-2">
         <Image
           src={user?.profile?.image?.url || ''}
           alt="User Profile Picture"

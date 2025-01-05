@@ -6,9 +6,9 @@ import { toast } from 'react-hot-toast';
 import { deleteImage, uploadImage } from '@/actions/web.action';
 import { CloudUploadIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { sleep } from '@/lib/utils';
-import Loader from '../ui/Loader';
+import Loader from '../Loaders/Loader';
 import { Button } from '../ui/button';
-import { Image as TypeImage } from '@/types/user.types';
+import { Image as TypeImage } from '@/types/web.types';
 import WEB_VALIDATION from '@/validations/web.validation';
 
 

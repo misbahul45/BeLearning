@@ -1,8 +1,15 @@
-import React from 'react'
+import ListArticle from '@/components/article/show/ListArticle'
+import React, { Suspense } from 'react'
 
-const page = () => {
+const page = async() => {
+
+
   return (
-    <div>page</div>
+    <div className='pt-20'>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ListArticle />
+      </Suspense>
+    </div>
   )
 }
 

@@ -1,10 +1,13 @@
+import ProfileInformationLoader from '@/components/Loaders/ProfileInformationLoader'
 import UserInformation from '@/components/profile/UserInformation'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = async () => {
   return (
     <div className='pt-2 overflow-y-auto h-full px-4'>
-      <UserInformation />
+      <Suspense fallback={<ProfileInformationLoader />}>
+        <UserInformation />
+      </Suspense>
     </div>
   )
 }

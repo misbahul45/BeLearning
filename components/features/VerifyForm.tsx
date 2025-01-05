@@ -9,7 +9,7 @@ import { Button } from '../ui/button';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sleep } from '@/lib/utils';
-import Loader from '../ui/Loader';
+import Loader from '../Loaders/Loader';
 
 const tokenSchema = z.object({
     token: z.string().min(1, "Token is required"),
