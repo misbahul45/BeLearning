@@ -62,32 +62,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const image = profile?.picture as string || defaultImage;
         const password = await bcrypt.hash(email, 10);
         const token=await bcrypt.hash(email+""+Date.now(), 10);
-
-        await prisma.user.upsert({
-          where: { email },
-          create: {
-            email,
-            username,
-            password,
-           verification:{
-              create:{
-                token,
-                isVerified:true
-              }
-           },
-            provider: Provider.GOOGLE,
-            profile: {
-              create: {
-                bio: "",
-                image: {
-                  create: { url: image }
+        const user=await prisma.user.findUnique({
+          where:{email},
+          select:{
+            provider:true
+          }
+        })
+        if(user?.provider!=="GOOGLE") return false;
+        if(!user){
+          await prisma.user.upsert({
+            where: { email },
+            create: {
+              email,
+              username,
+              password,
+              verification:{
+                create:{
+                  token,
+                  isVerified:true
                 }
               },
+              provider: Provider.GOOGLE,
+              profile: {
+                create: {
+                  image: {
+                    create: { url: image },
+                  },
+                },
+              },
             },
-          },
-          update: { provider: Provider.GOOGLE }
-        });
-
+            update: { provider: Provider.GOOGLE }
+          });
+        }
         return true;
       }
 
@@ -97,33 +103,46 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const imageProfile = (profile?.avatar_url as string) || defaultImage;
         const password = await bcrypt.hash(email as string, 10);
         const token=await bcrypt.hash(email+""+Date.now(), 10);
-        await prisma.user.upsert({
-          where: { email: email as string },
-          create: {
-            email: email as string,
-            username: username as string,
-            password,
-            verification:{
-              create:{
-                token,
-                isVerified:true
-              }
-            },
-            provider: Provider.GITHUB,
-            profile: {
+
+        const user=await prisma.user.findUnique({
+          where:{
+            email:email as string
+          },
+          select:{
+            provider:true
+          }
+        })
+        if(user?.provider!=="GITHUB") return false;
+        if(!user){
+          await prisma.user.upsert({
+              where: { 
+                email:email as string
+              },
               create: {
-                image: {
-                  create: { url: imageProfile},
+                email:email as string,
+                username:username as string,
+                password,
+                verification:{
+                  create:{
+                    token,
+                    isVerified:true
+                  }
+                },
+                provider: Provider.GOOGLE,
+                profile: {
+                  create: {
+                    image: {
+                      create: { url: imageProfile },
+                    },
+                  },
                 },
               },
-            },
-          },
-          update: { provider: Provider.GITHUB }
-        });
-
+              update: { provider: Provider.GOOGLE }
+            });
+          return true;
+        }
         return true;
       }
-
       return true;
     },
   },
@@ -133,5 +152,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: "/sign-in",
+    error:"/error"
   },
 });
