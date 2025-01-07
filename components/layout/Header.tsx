@@ -4,6 +4,7 @@ import { HEADER_LIST, SIDE_LIST } from '@/constants/layout';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Props{
   user?:unknown
@@ -11,16 +12,51 @@ interface Props{
 
 const Header = ({ user }: Props) => {
   const pathName = usePathname();
+  const [isShow, setIsShow] = useState(false);
+
+  const handleScroll=useCallback(()=>{
+    const scrollY = window.scrollY;
+    if(scrollY>0){
+      setIsShow(true)
+    }else{
+      setIsShow(false)
+    }
+  },[])
+  
+  useEffect(()=>{
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  },[handleScroll])
+
+  useEffect(() => {
+    let showTimeout: NodeJS.Timeout | null = null;
+  
+    if (isShow) {
+      showTimeout = setTimeout(() => {
+        setIsShow(false);
+      }, 5000);
+    }
+
+    return () => {
+      if (showTimeout) {
+        clearTimeout(showTimeout);
+      }
+    };
+  }, [isShow]);
 
   if (SIDE_LIST.some((item) => item.path.includes(pathName)) && pathName !== '/' || pathName.includes('/profile') || pathName.includes('/course')) {
     return null;
   }
 
+
   return (
     <motion.header
     initial={{ opacity: 0, y: -50 }} 
-    animate={{ opacity: 1, y: 0 }} 
-    transition={{ duration: 1.5 }} 
+    animate={(isShow ?{ opacity: 1, y: 0 }:{ opacity: 0, y: -50 })} 
+    transition={{ duration: 1 }} 
     className="fixed backdrop-blur-sm top-0 left-0 w-full z-50 flex justify-center">
       <nav className="relative flex gap-3 mx-auto mt-4 rounded-lg border bg-white/80 backdrop-blur-sm p-1 shadow-sm">
         {HEADER_LIST.map((item) => (

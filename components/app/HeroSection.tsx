@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Quote } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -35,7 +35,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative w-full pb-4 min-h-screen flex flex-col justify-center pt-24 items-center bg-gradient-to-br from-sky-200 via-blue-100 to-purple-100 overflow-hidden">
+    <div className="relative w-full pb-4 min-h-screen flex flex-col justify-center pt-8 items-center bg-gradient-to-br from-sky-200 via-blue-100 to-purple-100 overflow-hidden">
       <motion.div variants={containerVariants} initial={{opacity: 0}} animate={{opacity: 1, transition: {duration: 1}}}>
         <Image 
           src="/images/app/hero.svg" 
