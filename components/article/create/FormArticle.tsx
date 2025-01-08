@@ -13,11 +13,13 @@ import { createArticleAction } from '@/actions/article.action'
 import toast from 'react-hot-toast'
 import { slugify } from '@/lib/utils'
 import Loader from '@/components/Loaders/Loader'
+import { useRouter } from 'next/navigation'
 
 
 const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
 
 const FormArticle = ({ authorId }: { authorId: string }) => { 
+ const router=useRouter();
   const [image, setImage] = React.useState<Image>({
     url: '',
     fileId: '',
@@ -48,11 +50,7 @@ const FormArticle = ({ authorId }: { authorId: string }) => {
             cover:image
         })
         toast.success('Article saved as draft')
-        setImage({url:'',fileId:''})
-        setTitle('')
-        setSlug('')
-        setTags([])
-        setContent('')
+        router.push('/dashboard')
     } catch (error) {
         toast.error((error as Error).message)
     }

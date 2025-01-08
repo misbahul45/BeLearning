@@ -49,8 +49,8 @@ const ResponSection = () => {
               alt="Feedback Illustration"
               width={200}
               height={200}
+              loading='lazy'
               className="mx-auto"
-              priority
             />
           )}
           <div className="flex items-center gap-4">

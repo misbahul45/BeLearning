@@ -3,13 +3,14 @@ import ResetVerify from '@/components/auth/ResetVerify';
 import React from 'react';
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     token?:string,
     show?:string
-  }
+  }>
 }
 
-const Page = async({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const token = await searchParams.token;
   const show = await searchParams.show;
 

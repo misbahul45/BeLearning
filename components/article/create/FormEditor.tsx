@@ -7,6 +7,9 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import BulletList from "@tiptap/extension-bullet-list";
 import CodeBlock from "@tiptap/extension-code-block";
 import Link from "@tiptap/extension-link";
+import Image from '@tiptap/extension-image'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -30,7 +33,7 @@ export default function RichTextEditor({
             }),
             OrderedList.configure({ 
               HTMLAttributes:{
-                class: 'list-decimal'
+                class: 'list-decimal mb-2'
               }
             }),
             CodeBlock.configure({
@@ -38,7 +41,7 @@ export default function RichTextEditor({
               exitOnArrowDown: true,
               defaultLanguage: "plaintext",
               HTMLAttributes: {
-                class: "rounded-md p-4 bg-slate-700 text-cyan-300"
+                class: "rounded-md p-4 bg-slate-700 text-cyan-300 my-4"
               }
             }),
             Link.configure({
@@ -47,8 +50,23 @@ export default function RichTextEditor({
                 class: "text-primary underline italic hover:scale-105"
               }
             }),
+            Image.configure({
+              HTMLAttributes: {
+                class: "rounded-md"
+              }
+            }),
+            Paragraph.configure({
+              HTMLAttributes: {
+                class: "my-2"
+              }
+            }),
+            Text.configure({
+              HTMLAttributes: {
+                class: "my-2"
+              }
+            }) 
         ],
-        content: initialContent,
+        content: initialContent?initialContent:null,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
         },
@@ -60,7 +78,8 @@ export default function RichTextEditor({
         immediatelyRender: false,
     });
 
-    console.log(initialContent);
+
+
   
     return (
         <div className="space-y-2">

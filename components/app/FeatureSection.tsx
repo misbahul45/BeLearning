@@ -28,7 +28,7 @@ const FeatureSection = () => {
                 initial="containerHidden"
                 whileInView="containerVisible"
                 viewport={{ once: true }}
-                className='w-full max-w-6xl mx-auto bg-gradient-to-tr from-primary via-violet-600 to-indigo-600 p-10 rounded-xl shadow-xl my-8'
+                className='w-full max-w-6xl mx-auto bg-gradient-to-tr from-primary via-violet-600 to-indigo-600 lg:p-10 sm:p-8 p-6 rounded-xl shadow-xl my-8'
             >
                 <h1 className='md:text-4xl text-2xl font-bold text-white text-center'>Features Our Platform</h1>
                 <motion.div
@@ -36,18 +36,19 @@ const FeatureSection = () => {
                     variants={animationPage}
                     initial="containerHidden"
                     whileInView="containerVisible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:mt-8 mt-4"
                 >
                     {FEATURE_DATA.map((feature) => (
                         <motion.div
                             variants={animationPage}
                             viewport={{ once: true }}
                             key={feature.id}
-                            className='p-4 rounded-lg bg-slate-100 shadow-xl hover:shadow-2xl relative group hover:scale-105 hover:bg-white transition-all duration-300'
+                            className='lg:p-4 p-2 rounded-lg bg-slate-100 shadow-xl hover:shadow-2xl relative group hover:scale-105 hover:bg-white transition-all duration-300'
                         >
                             <Image
                                 src={feature.icon}
                                 alt={feature.title}
+                                loading='lazy'
                                 width={150}
                                 height={150}
                                 className='w-16 h-16 mx-auto'

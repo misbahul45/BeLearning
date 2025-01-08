@@ -4,8 +4,8 @@ import { mergeAttributes } from '@tiptap/core'
 type Levels = 1 | 2 
 
 const classes: Record<Levels, string> = {
-  1: 'text-3xl',
-  2: 'text-2xl',
+  1: 'text-3xl my-4',
+  2: 'text-2xl my-3',
 }
 
 export const Heading = BaseHeading.configure({ levels: [1, 2] }).extend({

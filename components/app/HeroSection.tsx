@@ -35,14 +35,14 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative w-full pb-4 min-h-screen flex flex-col justify-center pt-8 items-center bg-gradient-to-br from-sky-200 via-blue-100 to-purple-100 overflow-hidden">
+    <div className="relative w-full md:pb-4 pb-2 min-h-screen flex flex-col justify-center md:pt-8 pt-4 items-center bg-gradient-to-br from-sky-200 via-blue-100 to-purple-100 overflow-hidden">
       <motion.div variants={containerVariants} initial={{opacity: 0}} animate={{opacity: 1, transition: {duration: 1}}}>
         <Image 
           src="/images/app/hero.svg" 
           alt="logo" 
+          loading='lazy'
           width={250} 
           height={250} 
-          priority 
           className="drop-shadow-xl"
         />
       </motion.div>

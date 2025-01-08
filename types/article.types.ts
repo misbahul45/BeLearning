@@ -8,3 +8,17 @@ export interface CREATE_ARTICLE {
     tags: string[];
     cover:Image
 }
+
+
+export interface GET_ARTICLE {
+    id?:boolean; 
+    slug?:boolean;
+    title?:boolean;
+    content?:boolean;
+    author?:boolean;
+    cover?:boolean;
+    tags?:boolean;
+    createdAt?:boolean;
+    updatedAt?:boolean;
+    search?:string
+}

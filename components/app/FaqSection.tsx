@@ -25,31 +25,29 @@ const animation = {
 const FaqSection = () => {
   return (
     <motion.div
-      className="flex bg-slate-100 py-12 px-6 md:px-12"
+      className="flex md:flex-row flex-col gap-4 bg-slate-100 py-12 px-6 md:px-12"
       initial="containerHidden"
       whileInView="containerVisible"
       viewport={{ once: true }}
       variants={animation}
     >
-      {/* Image Section */}
-      <div className="flex-1 flex justify-center items-center">
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6">
+          Frequently Asked Questions
+        </h2>
         <Image
           src={'/images/app/question.svg'}
           alt="question"
+          loading='lazy'
           width={500}
           height={500}
           className="drop-shadow-lg"
         />
       </div>
-
-      {/* FAQ Section */}
       <motion.div
         className="flex-1"
         variants={animation}
       >
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6">
-          Frequently Asked Questions
-        </h2>
         <Accordion type="single" collapsible>
           {faqData.map((faq, index) => (
             <motion.div

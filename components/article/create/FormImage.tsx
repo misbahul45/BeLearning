@@ -87,6 +87,7 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
                 variant="destructive"
                 className="flex items-center space-x-2"
                 onClick={handleRemoveImage}
+                type="button"
                 disabled={loading.status}
               >
                 {loading.status && loading.type === 'remove' ? (

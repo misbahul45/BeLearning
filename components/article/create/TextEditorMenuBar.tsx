@@ -2,6 +2,8 @@ import { Bold, Italic, Strikethrough, CodeSquare ,ListOrdered, Redo, Undo, Under
 import { Editor } from "@tiptap/react";
 import URLDialog from "./URLDialog";
 import React from "react";
+import URLImage from "./URLImage";
+import { Image } from "@/types/web.types";
 
   const Button = ({
     onClick,
@@ -31,6 +33,7 @@ import React from "react";
   }) {
 
     const [link, setLink] = React.useState("");
+    const [image, setImage] = React.useState<Image | null>(null);
 
     if (!editor) return null;
     const buttons = [
@@ -92,6 +95,16 @@ import React from "react";
           }
         },
         isActive: editor.isActive("link"),
+        disabled: !editor.can().chain().focus().extendMarkRange("link").run(),
+      },
+      {
+        icon:<URLImage link={image} setLik={setImage} />,
+        onClick:()=>{
+          if (image) {
+            editor.chain().focus().setImage({ src: image.url, alt: image.fileId || new Date().toISOString() }).run();
+          }
+        },
+        isActive: editor.isActive("image"),
       },
       {
         icon: <Undo className="size-5" />,

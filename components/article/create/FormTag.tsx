@@ -14,6 +14,7 @@ const FormTag = ({ tags, setTags }: Props) => {
 
     const handleAddTags=(e:React.KeyboardEvent<HTMLInputElement>)=>{
         if(e.key === 'Enter'){
+            e.preventDefault()
             const newValue=e.currentTarget.value.trim().split('')[0].toUpperCase()+e.currentTarget.value.trim().slice(1)
             if(!tags.includes(newValue)){
                 setTags([...tags, newValue])
