@@ -6,9 +6,11 @@ import { Poster } from './Poster';
 
 export const revalidate = 60
 
-type ArticleWithRelations = Partial<Article & { cover: Cover; author: User }>;
+type ArticleWithRelations = Partial<Article & { cover: Cover; author: User }> & {
+  id?: string;
+};
 const PostersArticle = async() => {
-    const articles=await getArticlesAction({ slug: true, title: true, content: true, cover: true, tags: true, updatedAt: true, save:true, by:'DESC', take:6 });
+    const articles=await getArticlesAction({ slug: true, title: true, content: true, cover: true, tags: true, updatedAt: true, save:true, by:'COMMENTS', take:6 });
   return (
     <div>
         <Poster articles={articles as ArticleWithRelations[]} />

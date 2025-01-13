@@ -41,3 +41,10 @@ export const readingTime=(text: string) => {
   const time = Math.ceil(words / wpm);
   return time
 }
+
+export const handleRotate=(index:number)=>{
+    if(index%2==0){
+        return `rotate(${index * 0.8}deg)`
+    }
+    return `rotate(${index * -1}deg)`
+}

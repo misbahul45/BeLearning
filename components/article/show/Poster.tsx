@@ -7,13 +7,17 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import { Article } from "@prisma/client"
+import { Article, Cover } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
 import PosterLoader from "@/components/Loaders/PosterLoader"
+import { User } from "next-auth"
 
+type ArticleWithRelations = Partial<Article & { cover: Cover; author: User }> & {
+  id?: string;
+};
 type Props = {
-  articles: Article[]
+  articles: ArticleWithRelations[]
 }
 
 export function Poster({ articles }: Props) {

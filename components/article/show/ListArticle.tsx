@@ -8,7 +8,7 @@ import { auth } from '@/lib/auth'
 
 export const revalidate = 60
 const ListArticle = async() => {
-    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, by:'DESC', take:6 });
+    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, by:'VIEWS', take:6 });
     const session=await auth();
     const user=await getUserAction(session?.user?.email as string, {image: true, username: true, id: true, email: true});
   return (
