@@ -12,7 +12,7 @@ interface Props {
 
 const Header = ({ user }: Props) => {
   const pathName = usePathname();
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +27,7 @@ const Header = ({ user }: Props) => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
+
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
@@ -50,7 +51,7 @@ const Header = ({ user }: Props) => {
         initial={{ opacity: 0, y: -50 }}
         animate={isShow || isHovered ? { opacity: 1, y: 0 } : { opacity: 0, y: -50 }}
         transition={{ duration: 0.5 }}
-        className="relative flex gap-3 mx-auto mt-4 rounded-lg border bg-white/80 backdrop-blur-sm p-2 shadow-md"
+        className="relative flex gap-3 mx-auto mt-4 rounded-lg border bg-white/80 backdrop-blur-lg p-2 shadow-md"
       >
         {HEADER_LIST.map((item) => (
           <Link
@@ -77,7 +78,7 @@ const Header = ({ user }: Props) => {
         {user ? (
           <>
             <Link href="/article/create">
-              <Button variant="outline" className="h-full font-semibold">
+              <Button variant={pathName==='/article/create' ? 'outline' : 'ghost'} className="h-full font-semibold">
                 Write
               </Button>
             </Link>

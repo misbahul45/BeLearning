@@ -64,7 +64,7 @@ const SidenavHome = ({ userRole, isLogin }: Props) => {
             href={item.path}
             className={clsx(
               'flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300',
-              pathName === item.name
+              pathName === item.path ||item.path.includes(pathName)
                 ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600'
                 : 'text-gray-600 hover:bg-blue-100 hover:text-blue-500',
               !openNav && 'justify-center'

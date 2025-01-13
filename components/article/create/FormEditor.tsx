@@ -52,12 +52,12 @@ export default function RichTextEditor({
             }),
             Image.configure({
               HTMLAttributes: {
-                class: "rounded-md"
+                class: "rounded-md w-full max-w-xl mx-auto my-4"
               }
             }),
             Paragraph.configure({
               HTMLAttributes: {
-                class: "my-2"
+                class: "my-2 md:text-lg text-base" 
               }
             }),
             Text.configure({

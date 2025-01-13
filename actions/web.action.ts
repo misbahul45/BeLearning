@@ -29,7 +29,6 @@ export const deleteImage = async (fileId: string) => {
   try {
     if(fileId){
       const response = await imageKit.deleteFile(fileId);
-
       if (!response) {
         throw new Error("Failed to delete image");
       }  

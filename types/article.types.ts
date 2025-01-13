@@ -20,5 +20,9 @@ export interface GET_ARTICLE {
     tags?:boolean;
     createdAt?:boolean;
     updatedAt?:boolean;
-    search?:string
+    search?:string;
+    save?:boolean;
+    take?:number;
+    skip?:number;
+    by?:'ASC' | 'DESC'|'COMMENTS' | 'VIEWS' | 'SAVES';
 }

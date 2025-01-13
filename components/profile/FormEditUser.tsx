@@ -19,11 +19,12 @@ import FormImage from './formImage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserValidation } from '@/validations/user.validation';
 import { z } from 'zod';
-import { Image, USER } from '@/types/user.types';
+import { USER } from '@/types/user.types';
 import { sleep } from '@/lib/utils';
 import { updateUserAction } from '@/actions/user.action';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { Image } from '@/types/web.types';
 
 interface Props {
   user: USER;
