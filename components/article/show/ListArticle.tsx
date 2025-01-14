@@ -14,7 +14,7 @@ interface Props{
 
 export const revalidate = 60
 const ListArticle = async({ page, search, tag }:Props) => {
-    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, by:'VIEWS', take:6*page, search, tag });
+    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, like:true, by:'VIEWS', take:6*page, search, tag });
     const session=await auth();
     const user=session?.user?await getUserAction(session?.user?.email as string, {image: true, username: true, id: true, email: true}):null;
 
@@ -24,6 +24,7 @@ const ListArticle = async({ page, search, tag }:Props) => {
         <ListItemArticle
           key={item.slug}
           isSaved={item.saves.find((save) => save.userId === user?.id) && true || false}
+          isLoved={item.likes.find((like) => like.likedBy === user?.id) && true || false}
           user={user as USER}
           title={item.title}
           slug={item.slug}

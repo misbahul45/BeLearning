@@ -22,6 +22,7 @@ export interface GET_ARTICLE {
     updatedAt?:boolean;
     search?:string;
     save?:boolean;
+    like?:boolean;
     take?:number;
     skip?:number;
     tag?:string;

@@ -24,6 +24,7 @@ const page = async ({ searchParams }: PageProps) => {
   const { page, tag, search } = await searchParamsCache.parse(searchParams)
   const isTagOrSearchPresent = (tag && tag.trim() !== '') || (search && search.trim() !== '');
 
+
   return (
     <div className='w-full max-w-6xl mx-auto ms:px-0 px-2 py-2'>
       {isTagOrSearchPresent &&

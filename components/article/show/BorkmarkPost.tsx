@@ -2,7 +2,6 @@
 import React from 'react';
 import { Bookmark, BookmarkPlus, Loader2 } from 'lucide-react';
 import { saveArticleAction } from '@/actions/article.action';
-import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
 interface Props {
@@ -12,21 +11,14 @@ interface Props {
 }
 
 const BookmarkPost = ({ userId, slug, isSaved }: Props) => {
-  const handleSaveArticle = () =>{
-    if(isSaved){
-      toast.success('Article removed from bookmarks.');
-    }else{
-      toast.success('Article added to bookmarks.');
-    }
+  const handleSaveArticle = () => {
     return saveArticleAction(slug, userId);
   }
 
-  const [,formAction, isPending] = React.useActionState(
+  const [, formAction, isPending] = React.useActionState(
     handleSaveArticle,
     isSaved
   );
-
-
 
   return (
     <form action={formAction}>
@@ -37,18 +29,18 @@ const BookmarkPost = ({ userId, slug, isSaved }: Props) => {
         className={clsx(
           'p-2 rounded-full shadow-md transition-all duration-200 disabled:opacity-85 disabled:cursor-not-allowed',
           isSaved
-            ? 'bg-orange-600 hover:bg-red-700 text-white'
-            : 'bg-yellow-500 hover:bg-yellow-600 text-red-600'
+            ? 'bg-indigo-600 hover:bg-indigo-700'
+            : 'bg-gray-100 hover:bg-gray-200'
         )}
       >
         {isPending ? (
-          <Loader2 className="sm:size-5 size-3 animate-spin text-white" />
+          <Loader2 className="sm:size-5 size-3 animate-spin text-gray-600" />
         ) : (
           <>
             {isSaved ? (
-              <Bookmark className="sm:size-5 size-3" />
+              <Bookmark className="sm:size-5 size-3 text-white" />
             ) : (
-              <BookmarkPlus className="sm:size-5 size-3" />
+              <BookmarkPlus className="sm:size-5 size-3 text-indigo-600" />
             )}
           </>
         )}

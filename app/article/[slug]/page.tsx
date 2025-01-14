@@ -1,14 +1,19 @@
 import { getArticleAction } from '@/actions/article.action'
+import ButtonTag from '@/components/article/show/ButtonTag'
 import { Separator } from '@/components/ui/separator'
+import { searchParamsCache } from '@/lib/nuqs'
 import { readingTime } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { type SearchParams } from 'nuqs'
 import React from 'react'
 interface Props{
     params: Promise<{
         slug:string
     }>
+    searchParams: Promise<SearchParams>
 }
 
 export async function generateMetadata(props: Props) {
@@ -22,9 +27,14 @@ export async function generateMetadata(props: Props) {
   }
 }
 
-const page = async({params}:Props) => {
+const page = async({params,searchParams}:Props) => {
     const {slug}=await params
     const article=await getArticleAction(slug) 
+    const { tag }=await searchParamsCache.parse(searchParams)
+
+    if(tag){
+      redirect(`/article?tag=${tag}`)
+    }
   return (
     <div className='relatice w-full max-w-5xl mx-auto px-4 py-8'>
       <h1 className='text-center font-bold md:text-5xl sm:text-4xl text-2xl text-primary mt-4'>{article?.title}</h1>
@@ -56,7 +66,9 @@ const page = async({params}:Props) => {
         <div className='my-4 flex gap-2 items-center'>
           <p>Tags :</p>
           <div className='flex gap-2 items-center'>
-            {article?.tags.map((tag,i)=>(<div key={i} className='px-2 py-1 bg-orange-600 text-white rounded font-semibold shadow text-xs'>{tag.tags.tag}</div>))}
+            {article?.tags.map((tag,i)=>(
+                <ButtonTag key={i} tag={tag.tags.tag} />
+            ))}
           </div>
         </div>
     </div>

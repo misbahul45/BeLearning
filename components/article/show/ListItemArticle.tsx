@@ -4,6 +4,7 @@ import React from 'react';
 import BorkmarkPost from './BorkmarkPost';
 import LovePost from './LovePost';
 import { USER } from '@/types/user.types';
+import ButtonTag from './ButtonTag';
 
 interface Props {
   slug: string;
@@ -18,10 +19,11 @@ interface Props {
   }[],
   viewCount:number,
   user:Partial<USER>,
-  isSaved:boolean
+  isSaved:boolean,
+  isLoved:boolean
 }
 
-const ListItemArticle = ({ slug, cover, title, author, createdAt, tags, viewCount, user, isSaved }: Props) => {
+const ListItemArticle = ({ slug, cover, title, author, createdAt, tags, viewCount, user, isSaved, isLoved }: Props) => {
   return (
     <div className="p-4 shadow-lg border border-gray-200 bg-white rounded-lg transform transition duration-300 hover:shadow-xl">
       <Image
@@ -46,9 +48,7 @@ const ListItemArticle = ({ slug, cover, title, author, createdAt, tags, viewCoun
         <div className="flex flex-col justify-between">
             <div className="flex gap-2 flex-wrap">
                 {tags.map((tags, i)=>(
-                    <div key={i} className='px-2 py-1 bg-orange-600 text-white rounded font-semibold shadow text-[10px]'>
-                        {tags.tags.tag}
-                    </div>
+                    <ButtonTag key={i} tag={tags.tags.tag} className='bg-orange-500 text-white hover:bg-orange-600 text-xs px-2 rounded' />
                 ))}
             </div>
             <p className='text-sm mt-2 font-semibold text-gray-600'>{viewCount} views</p>
@@ -59,7 +59,7 @@ const ListItemArticle = ({ slug, cover, title, author, createdAt, tags, viewCoun
                   Read More
               </Link>
               <BorkmarkPost userId={user?.id || ''} slug={slug} isSaved={isSaved} />
-              <LovePost />
+              <LovePost userId={user?.id || ''} slug={slug} isLoved={isLoved} />
              </div>
         </div>
       </div>

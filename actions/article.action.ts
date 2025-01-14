@@ -90,6 +90,13 @@ export const getArticlesAction = async (getdata:GET_ARTICLE) => {
                             userId:true
                         }
                     }
+                }),
+                ...(getdata.like &&{
+                    likes:{
+                        select:{
+                            likedBy:true
+                        }
+                    }
                 })
             },
             take:getdata.take,
@@ -257,7 +264,6 @@ export const countArticlesAction = async (search?:string, tag?:string) => {
                 }})
             }
         })
-        console.log(count);
         return count;
     } catch (error) {
         throw error;

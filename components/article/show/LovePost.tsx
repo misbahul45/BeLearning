@@ -1,13 +1,51 @@
+'use client'
 import React from 'react'
-import { Heart as Love } from 'lucide-react';
+import { Loader2, Heart as Love } from 'lucide-react';
+import { likeArticleAction } from '@/actions/article.action';
+import clsx from 'clsx';
 
-const LovePost = () => {
+interface Props {
+  userId: string;
+  slug: string;
+  isLoved: boolean;
+}
+
+const LovePost = ({ userId, slug, isLoved }: Props) => {
+  const handleLikePost = () => {
+    return likeArticleAction(slug, userId);
+  }
+
+  const [, formAction, isPending] = React.useActionState(
+    handleLikePost,
+    isLoved
+  )
+
   return (
-      <form>
-        <button type='button' className='p-1.5 bg-violet-400 text-gray-50 hover:bg-violet-600 hover:text-white transition-all duration-100 rounded-full'>
-          <Love className='sm:size-5 size-3' />
-        </button>
-      </form>
+    <form action={formAction}>
+      <button
+        type="submit"
+        disabled={isPending}
+        aria-label={isLoved ? 'Remove bookmark' : 'Add bookmark'}
+        className={clsx(
+          'p-2 rounded-full shadow-md transition-all duration-200 disabled:opacity-85 disabled:cursor-not-allowed',
+          isLoved
+            ? 'bg-rose-500 hover:bg-rose-600' 
+            : 'bg-gray-100 hover:bg-gray-200' 
+        )}
+      >
+        {isPending ? (
+          <Loader2 className="sm:size-5 size-3 animate-spin text-gray-600" />
+        ) : (
+          <>
+            {isLoved ? (
+              <Love className="sm:size-5 size-3 text-white" />
+            ) : (
+              <Love className="sm:size-5 size-3 text-rose-500" />
+            )}
+          </>
+        )}
+      </button>
+    </form>
   )
 }
 
