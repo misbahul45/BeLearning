@@ -4,8 +4,6 @@ import { Article, Cover } from '@prisma/client';
 import { User } from 'next-auth';
 import { Poster } from './Poster';
 
-export const revalidate = 60
-
 type ArticleWithRelations = Partial<Article & { cover: Cover; author: User }> & {
   id?: string;
 };

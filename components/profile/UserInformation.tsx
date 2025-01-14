@@ -41,7 +41,7 @@ const UserInformation = async () => {
       </p>
 
       <div className="md:absolute sm:top-4 sm:right-4 flex gap-2 md:mt-0 mt-4">
-        <Link href={`/profile/edit?email=${user?.email}`} className='w-full'>
+        <Link href={`/profile/edit`} className='w-full'>
           <Button className='font-semibold w-full text-black' variant={'outline'}>
             Edit Profile
           </Button>

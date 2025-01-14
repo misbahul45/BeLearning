@@ -8,11 +8,10 @@ interface Props{
 }
 
 const ListCategory = ({searchCategory}:Props) => {
-  const [category, setCategory] = useQueryState('category', parseAsString.withDefault('').withOptions({
+  const [, setCategory] = useQueryState('category', parseAsString.withDefault('').withOptions({
     shallow: false
   }))
 
-  console.log(category)
 
   return (
     <div className='flex gap-4 items-center w-full overflow-x-auto md:[mask-image:none] [mask-image:_linear-gradient(to_right,_transparent_0,_white_12px,white_calc(100%-128px),_transparent_100%)] pl-4'>

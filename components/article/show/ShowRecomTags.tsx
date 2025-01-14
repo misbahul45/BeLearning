@@ -1,7 +1,7 @@
 import { getTagsAction } from '@/actions/tags.action'
-import { Button } from '@/components/ui/button'
 import { handleRotate } from '@/lib/utils'
 import React from 'react'
+import ButtonTag from './ButtonTag'
 
 
 const ShowRecomTags = async() => {
@@ -12,9 +12,7 @@ const ShowRecomTags = async() => {
         <div className='flex flex-wrap w-full justify-center mx-auto px-2 py-2.5 max-w-5xl'>
             {tags.map((item, index)=>(
                 <div key={index} className={`px-8 py-2`} style={{ transform: `${handleRotate(index)}` }}>
-                    <Button type='button' className={`text-nowrap hover:rotate-2 transition-all duration-100`}>
-                        {item.tag}
-                    </Button>
+                    <ButtonTag tag={item.tag} />
                 </div>
             ))}
         </div>

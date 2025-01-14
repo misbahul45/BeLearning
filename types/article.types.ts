@@ -24,5 +24,6 @@ export interface GET_ARTICLE {
     save?:boolean;
     take?:number;
     skip?:number;
+    tag?:string;
     by?:'ASC' | 'DESC'|'COMMENTS' | 'VIEWS' | 'SAVES';
 }

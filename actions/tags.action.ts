@@ -5,6 +5,16 @@ import { sleep } from "@/lib/utils"
 import { GET_DATA_TAGS } from "@/types/tags.types"
 
 export const getTagsAction = async(getData:GET_DATA_TAGS)=>{
+    const orderByConditions = [
+        getData.by === "ARTICLES" && { articles: { _count: 'desc' } },
+        { updatedAt: 'desc' },
+      ].filter(Boolean).map((condition) => {
+        if (typeof condition === 'object') {
+          return condition;
+        }
+        return {};
+      });
+
     try {
         await sleep();
         const tags=await prisma.tag.findMany({
@@ -12,11 +22,7 @@ export const getTagsAction = async(getData:GET_DATA_TAGS)=>{
                 tag:true,
             },
             take:getData.take,
-            orderBy:{
-                articles:{
-                    _count:'desc'
-                },
-            }
+            orderBy:orderByConditions 
         })
         return tags
     }catch{

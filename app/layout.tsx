@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { lazy } from "react";
 import { SessionProvider } from "next-auth/react"
+import ResetQueryOnload from "@/components/layout/ResetQueryOnload";
 
 const Header = lazy(() => import('@/components/layout/HedderWrapper'));
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <SessionProvider>
             <Header/>
             <Toaster position="top-center" />
+            <ResetQueryOnload />
             <NuqsAdapter>
               <div>
                 {children}

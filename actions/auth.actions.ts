@@ -131,7 +131,7 @@ export const signinAction = async (value: LOGIN) => {
         await signIn('credentials', {
             email: value.email,
             password: value.password,
-            callbackUrl: '/browse?category=all',
+            redirectTo: '/browse',
         });
 
     } catch (error) {
@@ -196,7 +196,9 @@ export const updateUserPasswordAction=async(email: string, password: string) => 
 
 export const googlesigninAction = async () => {
     try {
-       await signIn("google");
+       await signIn("google",{
+        redirectTo: '/browse'   
+       });
     } catch (error) {
         throw error;
     }
@@ -204,7 +206,9 @@ export const googlesigninAction = async () => {
 
 export const githubsigninAction = async () => {
     try {
-       await signIn("github");
+       await signIn("github",{
+        redirectTo: '/browse'
+       });
     } catch (error) {
         throw error;
     }

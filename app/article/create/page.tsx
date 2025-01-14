@@ -17,7 +17,7 @@ const page = async() => {
         }
     })
   return (
-    <div className='w-full py-20 md:px-4'>
+    <div className='w-full md:px-4 pb-4'>
         <div className='w-full max-w-6xl relative mx-auto h-full flex-1 rounded md:p-8 p-2'>
             <div className="flex justify-start items-center md:gap-6 gap-3">
                 <Link href='/article'>

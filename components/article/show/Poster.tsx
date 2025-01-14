@@ -37,7 +37,7 @@ export function Poster({ articles }: Props) {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 md:my-6 my-4">
+    <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 md:mb-6 mb-4">
       <Carousel
         plugins={[plugin.current]}
         className="flex-1"

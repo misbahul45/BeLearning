@@ -1,14 +1,14 @@
 import VerifyForm from '@/components/auth/VerifyForm';
+import { searchParamsCache } from '@/lib/nuqs';
+import { type SearchParams } from 'nuqs';
 import React from 'react'
 
-interface Props {
-  searchParams: {
-    token?: string;
-  };
+type PageProps = {
+  searchParams: Promise<SearchParams>
 }
 
-const Page =async({ searchParams }: Props) => {
-  const {token}=await searchParams
+const Page =async({ searchParams }: PageProps) => {
+  const {token}=await searchParamsCache.parse(searchParams);
 
   return (
     <div>

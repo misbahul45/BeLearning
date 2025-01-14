@@ -52,17 +52,18 @@ export const getArticlesAction = async (getdata:GET_ARTICLE) => {
         const articles = await prisma.article.findMany({
             where:{
                 status:'PUBLISHED',
-                title:{
-                    contains:getdata.search || '',
+                ...(getdata.search &&{title:{
+                    contains:getdata.search,
                     mode:'insensitive'
-                },
-                author:{
-                    username:{
-                        contains:getdata.search || '',
-                        mode:'insensitive'
+                }}),
+                ...(getdata.tag &&{tags:{
+                    some:{
+                        tags:{
+                            tag:getdata.tag
+                        }
                     }
-                },
-                
+                }})
+
             },
             select:{
                 id:getdata.id || false,
@@ -152,7 +153,50 @@ export const getArticleAction = async (slug:string) => {
     }
 };
 
-export  const saveArticleAction = async (slug:string, userId:string) => {
+export const likeArticleAction = async (slug:string, userId:string) => {
+    try {
+        const article=await prisma.article.findUnique({
+            where:{slug},
+            select:{id:true}
+        })
+        if(!article?.id) return false;
+
+        const isLiked=await prisma.articleLike.findUnique({
+            where:{
+                articleId_likedBy:{
+                    articleId:article.id,
+                    likedBy:userId
+                }
+            }
+        })
+
+        if(isLiked){
+            await prisma.articleLike.delete({
+                where:{
+                    articleId_likedBy:{
+                        articleId:article.id,
+                        likedBy:userId
+                    }
+                }
+            })
+            revalidatePath('/article');
+            return false;
+        }else{
+            await prisma.articleLike.create({
+                data:{  
+                    articleId:article.id,
+                    likedBy:userId
+                }
+            })
+            revalidatePath('/article');
+            return true
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const saveArticleAction = async (slug:string, userId:string) => {
     try {
         const article=await prisma.article.findUnique({
             where:{slug},
@@ -190,6 +234,31 @@ export  const saveArticleAction = async (slug:string, userId:string) => {
             revalidatePath('/article');
             return true
         }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const countArticlesAction = async (search?:string, tag?:string) => {
+    try {
+        const count=await prisma.article.count({
+            where:{
+                status:'PUBLISHED',
+                ...(search &&{title:{
+                    contains:search,
+                    mode:'insensitive'
+                }}),
+                ...(tag &&{tags:{
+                    some:{
+                        tags:{
+                            tag:tag
+                        }
+                    }
+                }})
+            }
+        })
+        console.log(count);
+        return count;
     } catch (error) {
         throw error;
     }

@@ -12,14 +12,11 @@ const SearchHeader = () => {
   }))
   const router=useRouter()
 
-
   useEffect(()=>{
     if(isFocused){
-        router.push(`/browse?query=all`)
+        router.push(`/browse`)
     }
   },[router, isFocused])
-
-
 
 
 

@@ -2,28 +2,16 @@ import { getUserAction } from '@/actions/user.action';
 import FormEditUser from '@/components/profile/FormEditUser';
 import { auth } from '@/lib/auth';
 import { USER } from '@/types/user.types';
-import WEB_VALIDATION from '@/validations/web.validation';
 import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-interface Props {
-  searchParams: { [key: string]: string | undefined };
-}
 
-const page = async ({ searchParams }: Props) => {
+const page = async () => {
   try {
     const session = await auth();
-    if (!session) return redirect('/login');
-
-    const { email: userEmail } = await searchParams;
-    if (!userEmail) return redirect('/browse?category=all');
-
-    const emailResult = WEB_VALIDATION.EMAIl.safeParse({ email: userEmail });
-    if (!emailResult.success) return redirect('/browse?category=all');
-
-    if (userEmail !== session?.user.email) return redirect('/browse?category=all');
+    const userEmail = session?.user.email as string;
 
     const userLogin=await getUserAction(userEmail, {image: true, username: true, bio: true, email: true});
 
