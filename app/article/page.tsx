@@ -5,7 +5,6 @@ import ArticleLoader from '@/components/Loaders/ArticleLoader'
 import PosterLoader from '@/components/Loaders/PosterLoader'
 import RecomTagsLoader from '@/components/Loaders/RecomTagsLoader'
 import { searchParamsCache } from '@/lib/nuqs'
-import { Metadata } from 'next'
 import { type SearchParams } from 'nuqs'
 import React, { Suspense } from 'react'
 
@@ -13,9 +12,11 @@ type PageProps = {
   searchParams: Promise<SearchParams>
 }
 
-export const metadata:Metadata={
-  title: "Be Learning | Article", 
-  description: "Be Learning is a platform for learning and teaching.",
+export async function generateMetadata({ searchParams }: PageProps) {
+  const { tag } = await searchParamsCache.parse(searchParams)
+  return {
+    title: `Be Learning Blog | ${tag?`Articles tagged with ${tag}`:'Articles'}`,
+  }
 }
 
 export const revalidate = 60

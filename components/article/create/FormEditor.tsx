@@ -41,7 +41,7 @@ export default function RichTextEditor({
               exitOnArrowDown: true,
               defaultLanguage: "plaintext",
               HTMLAttributes: {
-                class: "rounded-md p-4 bg-slate-700 text-cyan-300 my-4"
+                class: "rounded-md p-4 bg-slate-700 text-white my-4 overflow-x-auto",
               }
             }),
             Link.configure({

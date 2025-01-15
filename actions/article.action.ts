@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { CREATE_ARTICLE, GET_ARTICLE } from "@/types/article.types";
 import { ARTICLE_VALIDATION } from "@/validations/article.validation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const createArticleAction = async (values: CREATE_ARTICLE) => {
     try {
@@ -162,6 +163,8 @@ export const getArticleAction = async (slug:string) => {
 
 export const likeArticleAction = async (slug:string, userId:string) => {
     try {
+        if(!userId) return redirect('/sign-in');
+        
         const article=await prisma.article.findUnique({
             where:{slug},
             select:{id:true}
@@ -205,6 +208,7 @@ export const likeArticleAction = async (slug:string, userId:string) => {
 
 export const saveArticleAction = async (slug:string, userId:string) => {
     try {
+        if(!userId) return redirect('/sign-in');
         const article=await prisma.article.findUnique({
             where:{slug},
             select:{id:true}

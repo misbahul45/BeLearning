@@ -33,7 +33,7 @@ const page = async({params,searchParams}:Props) => {
     const { tag }=await searchParamsCache.parse(searchParams)
 
     if(tag){
-      redirect(`/article?tag=${tag}`)
+      redirect(`/article?tag=${encodeURIComponent(tag)}`)
     }
   return (
     <div className='relatice w-full max-w-5xl mx-auto px-4 py-8'>
