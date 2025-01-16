@@ -6,4 +6,6 @@ export const searchParamsCache = createSearchParamsCache({
     page: parseAsInteger.withDefault(1),
     tag: parseAsString.withDefault(''),
     token: parseAsString.withDefault(''),
+    article: parseAsString.withDefault(''),
+    orderBy: parseAsString.withDefault(''),
   })

@@ -52,7 +52,7 @@ export const getArticlesAction = async (getdata:GET_ARTICLE) => {
     try {
         const articles = await prisma.article.findMany({
             where:{
-                status:'PUBLISHED',
+                status:getdata.status=="ALL"?undefined:getdata.status,
                 ...(getdata.search &&{title:{
                     contains:getdata.search,
                     mode:'insensitive'
@@ -71,6 +71,7 @@ export const getArticlesAction = async (getdata:GET_ARTICLE) => {
                 title:getdata.title || false,
                 slug:getdata.slug || false,
                 viewCount:true,
+                status:true,
                 content:getdata.content || false,
                 createdAt:getdata.createdAt || false,
                 updatedAt:getdata.updatedAt || false,
@@ -103,8 +104,8 @@ export const getArticlesAction = async (getdata:GET_ARTICLE) => {
             take:getdata.take,
             skip:getdata.skip,
             orderBy: {
-                ...(getdata.by === 'ASC' && { ['createdAt']: 'asc' }),
-                ...(getdata.by === 'DESC' && { ['createdAt']: 'desc' }),
+                ...(getdata.by === 'ASC' && { ['updatedAt']: 'asc' }),
+                ...(getdata.by === 'DESC' && { ['updatedAt']: 'desc' }),
                 ...(getdata.by === 'COMMENTS' && {  comments: { _count: 'desc' } }),
                 ...(getdata.by === 'VIEWS' && { viewCount: 'desc' }),
                 ...(getdata.by === 'SAVES' && { saves: { _count: 'desc' } }),
@@ -273,3 +274,34 @@ export const countArticlesAction = async (search?:string, tag?:string) => {
         throw error;
     }
 }
+
+export const acceptArticleAction=async(slug:string)=>{
+    try {
+        await prisma.article.update({
+            where:{
+                slug:slug as string
+            },
+            data:{
+                status:"PUBLISHED"
+            }
+        })
+    } catch{
+     console.log("error")
+    }
+}
+
+export const rejectArticleAction=async(slug:string)=>{
+    try {
+        await prisma.article.update({
+            where:{
+                slug:slug as string
+            },
+            data:{
+                status:"REJECT"
+            }
+        })
+    } catch{
+     console.log("error")
+    }
+}
+

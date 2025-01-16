@@ -83,8 +83,8 @@ export default function RichTextEditor({
   
     return (
         <div className="space-y-2">
-            <TextEditorMenuBar editor={editor} />
             <EditorContent className="p-4" editor={editor} />
+            <TextEditorMenuBar editor={editor} />
         </div>
     );
 }

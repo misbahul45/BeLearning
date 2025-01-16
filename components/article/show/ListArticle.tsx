@@ -14,9 +14,9 @@ interface Props{
 
 export const revalidate = 60
 const ListArticle = async({ page, search, tag }:Props) => {
-    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, like:true, by:'VIEWS', take:6*page, search, tag });
+    const articles=await getArticlesAction({ slug: true, title: true, content: true, author: true, cover: true, tags: true, createdAt: false, updatedAt: true, save:true, like:true, by:'VIEWS',status:"PUBLISHED" ,take:6*page, search, tag });
     const session=await auth();
-    const user=session?.user?await getUserAction(session?.user?.email as string, {image: true, username: true, id: true, email: true}):null;
+    const user=session?.user?await getUserAction(session?.user?.email as string, {image: true, username: true, id: true, email: true,}):null;
 
   return (
     <div className='grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-1.5'>

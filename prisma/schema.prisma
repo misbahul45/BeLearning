@@ -114,6 +114,7 @@ enum ArticleStatus {
   DRAFT
   PUBLISHED
   APPROVED
+  REJECT
 }
 
 model Tag {

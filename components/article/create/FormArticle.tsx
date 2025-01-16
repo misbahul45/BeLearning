@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 
 const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
 
-const FormArticle = ({ authorId }: { authorId: string }) => { 
+const FormArticle = ({ authorId, role }: { authorId: string, role: string }) => { 
  const router=useRouter();
   const [image, setImage] = React.useState<Image>({
     url: '',
@@ -50,7 +50,7 @@ const FormArticle = ({ authorId }: { authorId: string }) => {
             cover:image
         })
         toast.success('Article saved as draft')
-        router.push('/dashboard')
+        router.push(`/dashboard/${role}`)
     } catch (error) {
         toast.error((error as Error).message)
     }

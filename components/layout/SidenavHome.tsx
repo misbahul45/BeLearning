@@ -23,6 +23,8 @@ const SidenavHome = ({ userRole, isLogin }: Props) => {
     await signoutAction();
   };
 
+  console.log(pathName);
+
   return (
     <aside
       className={clsx(
@@ -61,10 +63,10 @@ const SidenavHome = ({ userRole, isLogin }: Props) => {
         {SIDE_LIST.map((item) => (
           <Link
             key={item.id}
-            href={item.path}
+            href={item.path!=="/dashboard"?item.path:`/dashboard/${userRole.toLowerCase()}`}
             className={clsx(
               'flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300',
-              pathName === item.path ||item.path.includes(pathName)
+              pathName.includes(item.name.toLowerCase())
                 ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600'
                 : 'text-gray-600 hover:bg-blue-100 hover:text-blue-500',
               !openNav && 'justify-center'
@@ -97,6 +99,7 @@ const SidenavHome = ({ userRole, isLogin }: Props) => {
         {isLogin?
             <Button 
               type="submit" 
+              variant={"destructive"}
               className={clsx(
                 'w-full group hover:shadow-md',
                 !openNav && 'p-2'

@@ -13,7 +13,12 @@ const page = async() => {
            email:session?.user.email
         },
         select:{
-            id:true
+            id:true,
+            profile:{
+                select:{
+                    role:true
+                }
+            }
         }
     })
   return (
@@ -27,7 +32,7 @@ const page = async() => {
                 </Link>
                 <h1 className='font-bold md:text-3xl text-2xl'>Create Article</h1>
             </div>
-            <FormArticle authorId={author?.id || ''} />
+            <FormArticle authorId={author?.id || ''} role={author?.profile?.role || ''} />
         </div>
     </div>
   )

@@ -12,6 +12,7 @@ export interface CREATE_ARTICLE {
 
 export interface GET_ARTICLE {
     id?:boolean; 
+    status?:'DRAFT' | 'PUBLISHED' | 'APPROVED' | "ALL";
     slug?:boolean;
     title?:boolean;
     content?:boolean;
