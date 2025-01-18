@@ -15,7 +15,7 @@ import WEB_VALIDATION from '@/validations/web.validation';
 
 interface FormImageProps {
   image: TypeImage | null,
-  setImage: React.Dispatch<React.SetStateAction<TypeImage>>;
+  setImage: React.Dispatch<React.SetStateAction<TypeImage | null>>;
 }
 
 
@@ -67,7 +67,7 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
       <Card className="border-none">
         <CardContent className="p-6 space-y-4">
           <div className="flex flex-col items-center space-y-4">
-            <div className="relative border-4 border-gray-300 w-full max-w-xl mx-auto md:min-h-72 h-56 rounded-lg shadow-md">
+            <div className="relative border-4 border-gray-300 w-full max-w-xl mx-auto md:min-h-81 h-56 rounded-lg shadow-md">
               {image?.url ? (
                 <Image
                   src={image.url}

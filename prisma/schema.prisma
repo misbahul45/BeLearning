@@ -177,15 +177,28 @@ model ArticleSaveByUser {
 }
 
 //Entity Course
+model CoverCourse {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  url    String
+  fileId String
+
+  courseId String @unique @db.ObjectId
+  course   Course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Course {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  title       String?
-  description String?
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String       @unique
+  description String
   chapters    Chapter[]
   resources   Resource[]
-  isPublished Boolean    @default(false)
-  price       Float      @default(0)
-  isFree      Boolean    @default(false)
+  cover       CoverCourse?
+  isPublished Boolean      @default(false)
+  price       Float        @default(0)
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String @db.ObjectId
@@ -206,9 +219,9 @@ model Category {
 }
 
 model Resource {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  title String?
-  url   String?
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  url   String
 
   course   Course @relation(fields: [courseId], references: [id])
   courseId String @db.ObjectId

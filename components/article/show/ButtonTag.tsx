@@ -21,7 +21,7 @@ const ButtonTag = ({ tag, className }: { tag: string; className?: string }) => {
   };
 
   return (
-    <Button onClick={handleToggleTag} type="button" className={`transition-all duration-100 ${className}`}>
+    <Button onClick={handleToggleTag} type="button" className={`transition-all duration-100 ${className} lg:text-sm text-xs`}>
       {tag}
     </Button>
   );

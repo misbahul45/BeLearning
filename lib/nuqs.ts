@@ -8,4 +8,5 @@ export const searchParamsCache = createSearchParamsCache({
     token: parseAsString.withDefault(''),
     article: parseAsString.withDefault(''),
     orderBy: parseAsString.withDefault(''),
+    update: parseAsString.withDefault(''),
   })

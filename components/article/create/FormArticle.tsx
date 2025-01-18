@@ -20,10 +20,7 @@ const Editor=dynamic(()=>import('./FormEditor'),{ssr:false})
 
 const FormArticle = ({ authorId, role }: { authorId: string, role: string }) => { 
  const router=useRouter();
-  const [image, setImage] = React.useState<Image>({
-    url: '',
-    fileId: '',
-  });
+  const [image, setImage] = React.useState<Image | null>(null);
   const [title, setTitle] = React.useState<string>('');
   const [slug, setSlug] = React.useState<string>('');
   const [tags, setTags] = React.useState<string[]>([]);
@@ -38,7 +35,7 @@ const FormArticle = ({ authorId, role }: { authorId: string, role: string }) => 
     e.preventDefault()
     try {
         setLoading({state:true,type:'submit'})  
-        if(!image.url || !image.fileId || !title || !slug || !tags.length || !content){
+        if(!image || !image.fileId || !title || !slug || !tags.length || !content){
             throw new Error('All fields are required')
         }
         await createArticleAction({
@@ -50,7 +47,7 @@ const FormArticle = ({ authorId, role }: { authorId: string, role: string }) => 
             cover:image
         })
         toast.success('Article saved as draft')
-        router.push(`/dashboard/${role}`)
+        router.push(`/dashboard/${role.toLowerCase()}`)
     } catch (error) {
         toast.error((error as Error).message)
     }
