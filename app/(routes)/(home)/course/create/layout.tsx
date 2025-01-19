@@ -11,7 +11,7 @@ const layout =async({ children }:{ children: React.ReactNode}) => {
         redirect('/browse')
     }
   return (
-    <div>l
+    <div>
         {children}
     </div>
   )

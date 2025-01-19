@@ -176,7 +176,7 @@ const FormCreate = ({categories, authorId, course}:Props) => {
             <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-            <Editor initialContent={course?.description} onChange={(content) => form.setValue('description', content)} />
+              <Editor initialContent={course?.description} onChange={(content) => form.setValue('description', content)} />
             </FormControl>
             <FormMessage />
             </FormItem>

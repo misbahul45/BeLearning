@@ -9,7 +9,6 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Link from "@tiptap/extension-link";
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -60,11 +59,6 @@ export default function RichTextEditor({
                 class: "my-2 md:text-lg text-base" 
               }
             }),
-            Text.configure({
-              HTMLAttributes: {
-                class: "my-2"
-              }
-            }) 
         ],
         content: initialContent?initialContent:null,
         onUpdate: ({ editor }) => {

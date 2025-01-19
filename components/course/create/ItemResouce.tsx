@@ -1,7 +1,7 @@
 'use client'
 import { deleteResourceAction } from '@/actions/resource.action'
 import { Button } from '@/components/ui/button'
-import { GithubIcon, HardDrive, Loader, Trash2 } from 'lucide-react'
+import { GithubIcon, File ,Loader, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React from 'react'
@@ -36,7 +36,7 @@ const ItemResouce = ({ title, url, id}:Props) => {
         {url.includes('github')?
           <GithubIcon className='size-5' />
           :
-          <HardDrive className='size-5' />
+          <File className='size-5' />
         }
         <span className='text-sm font-semibold text-slate-500 group-hover:text-black transition-all duration-300'>{title}</span>
       </Link>

@@ -5,6 +5,8 @@ import { Search } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useRouter } from 'next/navigation'
 
+
+
 const SearchHeader = () => {
   const [isFocused, setIsFocused] = useState(false)
   const [search, setSearch] = useQueryState('search',parseAsString.withDefault('').withOptions({

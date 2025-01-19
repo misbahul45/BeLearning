@@ -235,8 +235,6 @@ model Chapter {
   title       String?
   description String?
   video       Video?
-  content     String?
-  ytUrl       String?
 
   accessible Boolean @default(false)
 
@@ -248,13 +246,19 @@ model Chapter {
 }
 
 model Video {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  url    String?
+  id     String    @id @default(auto()) @map("_id") @db.ObjectId
+  url    String
   fileId String?
+  name   NameVideo
 
   chapter   Chapter @relation(fields: [chapterId], references: [id])
   chapterId String  @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum NameVideo {
+  UPLOAD
+  YOUTUBE
 }

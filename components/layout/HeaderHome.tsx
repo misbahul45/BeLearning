@@ -4,7 +4,7 @@ import UserLogin from './UserLogin'
 import AvatarLoader from '../Loaders/AvatarLoader'
 
 
-const HeaderHome = () => {
+const HeaderHome = async() => {
   return (
     <header className='w-full pt-3 pb-1 flex justify-between items-center md:px-12 sm:px-9 px-6 '>
         <SearchHeader />

@@ -12,7 +12,7 @@ type PageProps={
 }
 
 const page = async({ searchParams }:PageProps ) => {
-  const categories=await getCategoryAction({take:6});
+  const categories=await getCategoryAction();
   const session=await auth();
   const user=await getUserAction(session?.user.email as string,{id:true})
 

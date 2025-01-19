@@ -16,7 +16,37 @@ export class COURSE_VALIDATION{
         title:z.string().min(5).max(100),
         link:z.string().url()
     })
+    static readonly CHAPTER = z.object({
+        title: z.string().min(5, "Title must be at least 5 characters").max(100),
+        description: z.string().min(5),
+        video: z.object({
+          name: z.enum(["UPLOAD", "YOUTUBE"]).optional(),
+          fileId: z.string().optional().transform(val => val === '' ? undefined : val),
+          url: z.string().optional().transform(val => val === '' ? undefined : val),
+        })
+        .refine(
+          (data) => {
+            if (!data.name) return true;
+            
+            if (data.name === "UPLOAD") {
+              return !!data.fileId;
+            }
+            
+            if (data.name === "YOUTUBE") {
+              return !!data.url;
+            }
+            
+            return true;
+          },
+          {
+            message: "Invalid video data configuration",
+          }
+        )
+        .optional(),
+      });
+         
 }
 
 export type CREATE_COURSE=z.infer<typeof COURSE_VALIDATION.CREATE>
 export type RESOURCE=z.infer<typeof COURSE_VALIDATION.RESOURCE>
+export type CHAPTER=z.infer<typeof COURSE_VALIDATION.CHAPTER>

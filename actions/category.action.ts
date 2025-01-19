@@ -2,16 +2,9 @@
 
 import prisma from "@/lib/prisma";
 
-export const getCategoryAction=async({ take, search }:{ take:number, search?:string   })=>{
+export const getCategoryAction=async()=>{
     try {
         const categories=await prisma.category.findMany({
-            where:{
-                name:{
-                    contains:search,
-                    mode:'insensitive'
-                }
-            },
-            take,
             select:{
                 id:true,
                 name:true

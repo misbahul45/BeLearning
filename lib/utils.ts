@@ -48,3 +48,14 @@ export const handleRotate=(index:number)=>{
     }
     return `rotate(${index * -1}deg)`
 }
+
+export function convertToEmbedUrl(url: string) {
+  const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:[\w\-]+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  
+  if (videoIdMatch && videoIdMatch[1]) {
+    const videoId = videoIdMatch[1];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else {
+    throw new Error('Invalid YouTube URL');
+  }
+}

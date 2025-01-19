@@ -23,8 +23,6 @@ const SidenavHome = ({ userRole, isLogin }: Props) => {
     await signoutAction();
   };
 
-  console.log(pathName);
-
   return (
     <aside
       className={clsx(
