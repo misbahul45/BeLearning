@@ -12,8 +12,7 @@ type PageProps={
 }
 
 const page = async({ searchParams }:PageProps ) => {
-  const categories=await getCategoryAction();
-  const session=await auth();
+  const [categories, session]=await Promise.all([getCategoryAction(), auth()])
   const user=await getUserAction(session?.user.email as string,{id:true})
 
   const { update }=await searchParamsCache.parse(searchParams);

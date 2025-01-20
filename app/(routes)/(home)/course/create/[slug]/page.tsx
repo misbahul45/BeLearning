@@ -1,14 +1,16 @@
 import DialogResource from '@/components/course/create/DialogResources';
 import ItemResouce from '@/components/course/create/ItemResouce';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
-import { ArrowLeft, Plus, BookOpen, FileText, GraduationCap } from 'lucide-react';
+import { ArrowLeft, BookOpen, FileText, GraduationCap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
+import CreateChapter from '@/components/course/create/CreateChapter';
+import ItemChapter from '@/components/course/create/ItemChapter';
+import PublishCourse from '@/components/course/create/PublishCourse';
 
 type PageProps = {
   params: {
@@ -17,13 +19,34 @@ type PageProps = {
 };
 
 const Page = async ({ params }: PageProps) => {
-  const { slug } = params;
+  const { slug } = await params;
   const course = await prisma.course.findUnique({
     where: { slug },
     include: {
-      cover: true,
-      resources: true,
-      chapters: true,
+      category: {
+        select:{
+          name: true
+        }
+      },
+      cover: {
+        select: {
+          url: true,
+          fileId: true,
+        },
+      },
+      resources:{
+        select: {
+          id: true,
+          title: true,
+          url: true,
+        }
+      },
+      chapters: {
+        select:{
+          id: true,
+          title: true,
+        }
+      },
     },
   });
 
@@ -46,23 +69,30 @@ const Page = async ({ params }: PageProps) => {
                 Course Setup
               </h1>
             </div>
-            <form action="">
-              <Button
-                disabled={course?.chapters.length === 0}
-                type="submit"
-                variant={course?.isPublished ? 'outline' : 'default'}
-                className="min-w-28"
-              >
-                {course?.isPublished ? 'Unpublish' : 'Publish'}
-              </Button>
-            </form>
+            <PublishCourse slug={slug} course={
+              {
+                chapters: course.chapters.length,
+                isPublished: course.isPublished
+              }
+            } />
           </div>
           <p className="text-sm text-gray-500">Complete all fields to publish your course</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-3xl font-semibold text-center mb-6">{course?.title}</h2>
-          <div className="relative w-full h-[400px] mb-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-4">
+          <div className="flex flex-col items-center justify-center">
+            <h2 className="text-3xl font-semibold text-center mb-6">{course?.title}</h2>
+            <div className="flex gap-4">
+              <div className="p-2 bg-primary text-blue-200 rounded-full text-xs shadow hover:scale-105 hover:text-white  hover:font-semibold transition-all duration-300">
+                {course.category.name}
+              </div>
+              <div className="p-2 bg-orange-500 text-orange-200 rounded-full text-xs  shadow hover:scale-105 hover:text-white hover:font-semibold transition-all duration-300">
+                {course.price===0?"Free":course.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+              </div>
+            </div>
+          </div>
+         
+          <div className="relative w-full h-[400px]">
             <Image
               src={course?.cover?.url || ''}
               alt={'image-' + course?.title}
@@ -85,12 +115,7 @@ const Page = async ({ params }: PageProps) => {
                 <BookOpen className="size-5 text-blue-500" />
                 Chapters
               </CardTitle>
-              <Link href={`/course/create/${slug}/upload`}>
-                <Button size="sm" variant="outline" className="gap-2">
-                  <Plus className="size-4" />
-                  Add Chapter
-                </Button>
-              </Link>
+              <CreateChapter courseId={course?.id} slug={slug} />
             </CardHeader>
             <CardContent>
               {course?.chapters.length === 0 ? (
@@ -99,14 +124,15 @@ const Page = async ({ params }: PageProps) => {
                   <p>No chapters yet. Start by adding your first chapter!</p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {/* Add chapter list here */}
+                <div className="space-y-2 border rounded-lg p-2">
+                  {course?.chapters.map((item) => (
+                   <ItemChapter key={item.id} slug={slug} id={item.id} title={item.title || ''} />
+                  ))}
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Resources Section */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
@@ -116,7 +142,7 @@ const Page = async ({ params }: PageProps) => {
               <DialogResource courseId={course?.id || ''} slug={course?.slug || ''} />
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 border rounded-lg p-4">
+              <div className="space-y-2 border rounded-lg p-2">
                 {course?.resources.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <FileText className="size-12 mx-auto mb-2 text-gray-400" />
@@ -129,6 +155,7 @@ const Page = async ({ params }: PageProps) => {
                       id={item.id}
                       title={item.title ?? ''}
                       url={item.url ?? ''}
+                      courseSlug={slug}
                     />
                   ))
                 )}

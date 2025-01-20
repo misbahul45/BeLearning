@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -9,28 +10,55 @@ import FormVideo from './FormVideo';
 import { CHAPTER, COURSE_VALIDATION } from '@/validations/course.validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
+import Loader from '@/components/Loaders/Loader';
+import { sleep } from '@/lib/utils';
+import { updateChapterAction } from '@/actions/chapter.action';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const Editor=dynamic(()=>import('../../article/create/FormEditor'),{ssr:false})
 
-const FormChapter = () => {
+interface Props{
+  id:string;
+  title:string | null;
+  description?:string | null;
+  video:{
+    name: 'UPLOAD' | 'YOUTUBE' | undefined;
+    url: string | undefined;
+    fileId: string | undefined;
+  } | null;
+  slug:string
+}
+
+const FormChapter = ({ id,title,description,video, slug }:Props) => {
+  const router=useRouter();
   const form = useForm<CHAPTER>({
     resolver: zodResolver(COURSE_VALIDATION.CHAPTER),
     mode: 'onChange',
     defaultValues: {
-      title: '',
-      description: '',
+      title: title || '',
+      description: description || '',
       video:{
-        name: undefined,
-        url:undefined,
-        fileId:undefined
+        name: video?.name || undefined,
+        url: video?.url || undefined,
+        fileId: video?.fileId || undefined
       }
     }
   });
 
+  console.log(slug)
 
-  const onSubmit = (data:CHAPTER) => {
-    console.log(data);
+
+  const onSubmit = async(data:CHAPTER) => {
+    try {
+      await sleep()
+      await updateChapterAction(slug, id, data)
+      router.push(`/course/create/${slug}`)
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
   };
+
 
   return (
     <div className="flex-1 p-4">
@@ -90,13 +118,19 @@ const FormChapter = () => {
                   <FormItem>
                     <div className="space-y-2">
                       <FormControl>
-                        <FormVideo videoUrl={form.getValues('video')?.url || ''}  fileId={form.getValues('video')?.fileId || ''} onUpdate={(url, fileId, name) =>form.setValue('video', {url, fileId, name: name as "UPLOAD" | "YOUTUBE"}) } />
+                        <FormVideo videoUrl={form.getValues('video')?.url || ''} name={form.getValues('video')?.name}  fileId={form.getValues('video')?.fileId} onUpdate={(url, fileId, name) =>form.setValue('video', {url, fileId, name: name as "UPLOAD" | "YOUTUBE"}) } />
                       </FormControl>
                     </div>
                   </FormItem>
                 )}
               />
-              <Button size={'lg'} type='submit' disabled={!form.formState.isValid} className='w-full'>Save Chapters</Button>
+              <Button size={'lg'} type='submit' disabled={!form.formState.isValid || form.formState.isSubmitting} className='w-full'>
+                {form.formState.isSubmitting?
+                  <Loader />
+                  :
+                  "Save Changes"
+                }
+              </Button>
             </form>
           </Form>
         </CardContent>

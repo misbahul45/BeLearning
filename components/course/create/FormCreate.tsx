@@ -101,8 +101,8 @@ const FormCreate = ({categories, authorId, course}:Props) => {
   },[category, form])
 
   useEffect(()=>{
-
-  },[])
+    form.setValue('price', Number(money.replace(/[^0-9]/g, '')));
+  },[money, form])
 
   const handleGenerateSlug = () => {
     if(!form.getValues('title')){
@@ -114,6 +114,8 @@ const FormCreate = ({categories, authorId, course}:Props) => {
         form.setValue('slug', slug+'-'+Date.now());
     })
   };
+
+  console.log(form.getValues())
 
   return (
     <div className="w-full max-w-4xl mx-auto">

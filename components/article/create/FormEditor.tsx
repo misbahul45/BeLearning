@@ -22,7 +22,13 @@ export default function RichTextEditor({
 
     const editor = useEditor({
         extensions: [
-            StarterKit,
+          StarterKit.configure({
+            heading: false,
+            bulletList: false,
+            orderedList: false,
+            codeBlock: false,
+            paragraph: false,
+        }),
             Underline,
             Heading,
             BulletList.configure({ 
@@ -51,7 +57,7 @@ export default function RichTextEditor({
             }),
             Image.configure({
               HTMLAttributes: {
-                class: "rounded-md w-full max-w-xl mx-auto my-4"
+                class: "rounded-md w-full max-w-4xl mx-auto my-4"
               }
             }),
             Paragraph.configure({

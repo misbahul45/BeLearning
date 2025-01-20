@@ -11,18 +11,27 @@ interface Props{
 }
 
 const ListCategory = ({searchCategory, categories}:Props) => {
-  const [, setCategory] = useQueryState('category', parseAsString.withDefault('').withOptions({
+  const [category,setCategory] = useQueryState('category', parseAsString.withDefault('').withOptions({
     shallow: false
   }))
 
 
+
   return (
     <div className='flex gap-4 items-center w-full overflow-x-auto md:[mask-image:none] [mask-image:_linear-gradient(to_right,_transparent_0,_white_12px,white_calc(100%-128px),_transparent_100%)] pl-4 overflow-auto scrollbar'>
+        <button
+          onClick={() => setCategory('')}
+          className={`text-xs px-2.5 text-nowrap py-2 font-semibold rounded shadow-md hover:bg-primary hover:text-white transition-all duration-300 ${
+            category === '' || category === 'all' ? 'bg-primary text-white' : 'bg-slate-100'
+          }`}
+        >
+          All
+        </button>
       {categories.map((item) => (
         <button
           key={item.id}
           onClick={() => setCategory(item.name.toLowerCase())}
-          className={`text-sm px-4 text-nowrap py-2 rounded shadow-md hover:bg-primary hover:text-white transition-all duration-300 ${
+          className={`text-xs px-2.5 text-nowrap py-2 font-semibold rounded shadow-md hover:bg-primary hover:text-white transition-all duration-300 ${
             searchCategory === item.name.toLowerCase() ? 'bg-primary text-white' : 'bg-slate-100'
           }`}
         >

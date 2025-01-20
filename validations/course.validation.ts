@@ -18,7 +18,7 @@ export class COURSE_VALIDATION{
     })
     static readonly CHAPTER = z.object({
         title: z.string().min(5, "Title must be at least 5 characters").max(100),
-        description: z.string().min(5),
+        description: z.string().optional(),
         video: z.object({
           name: z.enum(["UPLOAD", "YOUTUBE"]).optional(),
           fileId: z.string().optional().transform(val => val === '' ? undefined : val),

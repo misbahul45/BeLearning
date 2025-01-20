@@ -14,13 +14,15 @@ import { convertToEmbedUrl } from "@/lib/utils";
 
 interface Props{
     videoUrl:string;
-    onUpdate:(url:string,fileId:string, name:'UPLOAD'|'YOUTUBE'|undefined)=>void,
-    fileId:string
+    onUpdate:(url:string,fileId:string|undefined, name:'UPLOAD'|'YOUTUBE'|undefined)=>void,
+    fileId?:string
+    name:'UPLOAD'|'YOUTUBE'|undefined
 }
 
-const FormVideo = ( {videoUrl, fileId, onUpdate}: Props) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(videoUrl|| null);
-  const [ytUrl, setYtUrl] = useState<string>('');
+
+const FormVideo = ( {videoUrl, fileId, name, onUpdate}: Props) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(name === 'UPLOAD' ? videoUrl : null);
+  const [ytUrl, setYtUrl] = useState<string>(name === 'YOUTUBE' ? videoUrl : '');
   const [isPending, setartTransition] = React.useTransition();
   const [file, setFile]= useState<File | null>(null);
   const router=useRouter();
@@ -82,9 +84,11 @@ const FormVideo = ( {videoUrl, fileId, onUpdate}: Props) => {
   const onChangeAddYtVideo=(url:string)=>{
     if(url.includes('youtu.be')){
       url=convertToEmbedUrl(url);
-      onUpdate(url, '', 'YOUTUBE');
+      onUpdate(url, undefined, 'YOUTUBE');
     }else{
-      toast.error('Invalid YouTube URL');
+      if(url.length>10){
+        toast.error('Invalid YouTube URL');
+      }
     }
     setYtUrl(url);
   }
