@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { parseAsString, useQueryState } from 'nuqs';
+import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
 import React, { useEffect, useState } from 'react'
 
 interface Props {
@@ -16,6 +16,7 @@ const SearchArticle = ({ tags }: Props) => {
     const [isFocused, setIsFocused] = useState(false)
     const [search, setSearch] = useQueryState('search', parseAsString.withDefault('').withOptions({ shallow: false }))
     const [tagData, setTag] = useQueryState('tag', parseAsString.withDefault('').withOptions({ shallow: false }))
+    const [,setPage]=useQueryState('page', parseAsInteger.withDefault(1).withOptions({ shallow: false }))
     const tagsContainerRef = React.useRef<HTMLDivElement>(null)
     const tagRefs = React.useRef<Map<string, HTMLButtonElement>>(new Map())
 
@@ -32,6 +33,7 @@ const SearchArticle = ({ tags }: Props) => {
     }
 
     const handleSearchByTag = (value: string) => {
+      setPage(1);
       const targetButton = tagRefs.current.get(value)
       
       if (targetButton && tagsContainerRef.current) {
@@ -67,7 +69,7 @@ const SearchArticle = ({ tags }: Props) => {
         </div>
         <div 
           ref={tagsContainerRef}
-          className='w-full max-w-xl px-10 flex gap-2 overflow-auto scrollbar [mask-image:_linear-gradient(to_left,_transparent_0,_white_50px,white_calc(100%-12px),_transparent_100%)]'
+          className='w-full max-w-xl px-10 flex gap-2 overflow-auto scrollbar'
         >
           {tags.map((item, index) => (
             <Button 

@@ -15,7 +15,7 @@ type PageProps = {
 export async function generateMetadata({ searchParams }: PageProps) {
   const { tag } = await searchParamsCache.parse(searchParams)
   return {
-    title: `Be Learning Blog | ${tag?`Articles tagged with ${tag}`:'Articles'}`,
+    title: `Be Learning Blog | ${tag ? `Articles tagged with ${tag}` : 'Articles'}`,
   }
 }
 
@@ -23,27 +23,36 @@ export const revalidate = 60
 
 const page = async ({ searchParams }: PageProps) => {
   const { page, tag, search } = await searchParamsCache.parse(searchParams)
-  const isTagOrSearchPresent = (tag && tag.trim() !== '') || (search && search.trim() !== '');
-
+  const isTagOrSearchPresent = (tag && tag.trim() !== '') || (search && search.trim() !== '')
 
   return (
-    <div className='w-full max-w-6xl mx-auto ms:px-0 px-2 py-2'>
-      {isTagOrSearchPresent &&
-        <p className='mb-4 md:text-4xl font-semibold text-gray-400'>Result for <span className='text-gray-800'>{(tag && search)? tag +" & "+ search : tag || search}</span></p>
-      }
-      {page>1 &&
-        <p className='mb-4 md:text-4xl font-semibold text-gray-400'>Result for Page <span className='text-gray-800'>{page}</span></p>
-      }
+    <div className="w-full max-w-6xl mx-auto ms:px-0 px-2 py-2">
+      {(isTagOrSearchPresent || page > 1) && (
+        <p className="mb-4 md:text-2xl text-lg font-semibold text-gray-400">
+          Result for{' '}
+          <span className="text-gray-800">
+            {(tag && search) ? `${tag} & ${search}` : tag || search}
+          </span>
+          {page > 1 && (
+            <>
+              {isTagOrSearchPresent && <span className="text-gray-800"> & </span>}
+              Page <span className="text-gray-800">{page}</span>
+            </>
+          )}
+        </p>
+      )}
+
       {!isTagOrSearchPresent && (
         <>
-            <Suspense fallback={<PosterLoader />}>
-              <PostersArticle page={page} />
-            </Suspense>
-            <Suspense fallback={<RecomTagsLoader />}>
-              <ShowRecomTags page={page} />
-            </Suspense>
+          <Suspense fallback={<PosterLoader />}>
+            <PostersArticle page={page} />
+          </Suspense>
+          <Suspense fallback={<RecomTagsLoader />}>
+            <ShowRecomTags page={page} />
+          </Suspense>
         </>
       )}
+
       <Suspense fallback={<ArticleLoader />}>
         <ListArticle page={page} search={search} tag={tag} />
       </Suspense>
