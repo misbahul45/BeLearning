@@ -142,7 +142,21 @@ export const getArticleAction = async (slug:string) => {
                         url:true
                     }
                 },
-                comments:true,
+                comments:{
+                    select:{
+                        userId:true
+                    }
+                },
+                likes:{
+                    select:{
+                        likedBy:true
+                    }
+                },
+                saves:{
+                    select:{
+                        userId:true
+                    }
+                },
                 author:{
                     select:{
                         username:true,
@@ -304,4 +318,5 @@ export const rejectArticleAction=async(slug:string)=>{
      console.log("error")
     }
 }
+
 

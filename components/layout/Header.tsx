@@ -28,6 +28,19 @@ const Header = ({ user }: Props) => {
     };
   }, [handleScroll]);
 
+  useEffect(()=>{
+    let TimeOut:NodeJS.Timeout;
+
+    if(isShow && isHovered){
+      TimeOut = setTimeout(() => {
+        setIsHovered(false);
+      }, 1000);
+    }
+
+    return () => clearTimeout(TimeOut)
+    
+  },[isShow, isHovered])
+
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
