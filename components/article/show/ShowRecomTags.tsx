@@ -4,7 +4,10 @@ import React from 'react'
 import ButtonTag from './ButtonTag'
 
 
-const ShowRecomTags = async() => {
+const ShowRecomTags = async({ page }:{ page:number }) => {
+
+    if(page>1){return null}
+
     const tags=await getTagsAction({take:(Math.floor(Math.random()*8)+2) as number, by:'ARTICLES'});
   return (
     <>

@@ -4,7 +4,7 @@ import { USER } from '@/types/user.types'
 import { auth } from '@/lib/auth'
 import React from 'react'
 import ListItemArticle from './ListItemArticle'
-import ScrollToFetch from './ScrollToFetch'
+import ArticlePagination from './ArticlePagination'
 
 interface Props {
   page: number
@@ -30,7 +30,8 @@ const ListArticle = async ({ page, search, tag }: Props) => {
       like: true,
       by: 'VIEWS',
       status: 'PUBLISHED',
-      take: 6 * page,
+      take: 6,
+      skip: 6 * (page - 1),
       search,
       tag
     }),
@@ -58,24 +59,25 @@ const ListArticle = async ({ page, search, tag }: Props) => {
   )
 
   return (
-    <div className='grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-1.5'>
-      {articles.map((article) => (
-        <ListItemArticle
-          key={article.slug}
-          isSaved={userSaves.has(article.slug)}
-          isLoved={userLikes.has(article.slug)}
-          user={user as USER}
-          title={article.title}
-          slug={article.slug}
-          viewCount={article.viewCount}
-          cover={article.cover?.url as string}
-          tags={article.tags}
-          author={article.author.username}
-          createdAt={article.updatedAt}
-        />
-      ))}
-      <ScrollToFetch search={search} tag={tag} />
-    </div>
+    <>
+      <div className='grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-1.5'>
+        {articles.map((article) => (
+          <ListItemArticle
+            key={article.slug}
+            isSaved={userSaves.has(article.slug)}
+            isLoved={userLikes.has(article.slug)}
+            user={user as USER}
+            title={article.title}
+            slug={article.slug}
+            viewCount={article.viewCount}
+            cover={article.cover?.url as string}
+            tags={article.tags}
+            author={article.author.username}
+            createdAt={article.updatedAt} />
+        ))}
+      </div>
+      <ArticlePagination search={search} tag={tag} />
+    </>
   )
 }
 

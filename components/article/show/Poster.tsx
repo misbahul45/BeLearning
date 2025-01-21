@@ -17,7 +17,7 @@ type ArticleWithRelations = Partial<Article & { cover: Cover; author: User }> & 
   id?: string;
 };
 type Props = {
-  articles: ArticleWithRelations[]
+  articles: ArticleWithRelations[];
 }
 
 export function Poster({ articles }: Props) {
@@ -35,6 +35,7 @@ export function Poster({ articles }: Props) {
         <PosterLoader />
     )
   }
+
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 md:mb-6 mb-4">

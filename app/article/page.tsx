@@ -31,13 +31,16 @@ const page = async ({ searchParams }: PageProps) => {
       {isTagOrSearchPresent &&
         <p className='mb-4 md:text-4xl font-semibold text-gray-400'>Result for <span className='text-gray-800'>{(tag && search)? tag +" & "+ search : tag || search}</span></p>
       }
+      {page>1 &&
+        <p className='mb-4 md:text-4xl font-semibold text-gray-400'>Result for Page <span className='text-gray-800'>{page}</span></p>
+      }
       {!isTagOrSearchPresent && (
         <>
             <Suspense fallback={<PosterLoader />}>
-              <PostersArticle />
+              <PostersArticle page={page} />
             </Suspense>
             <Suspense fallback={<RecomTagsLoader />}>
-              <ShowRecomTags />
+              <ShowRecomTags page={page} />
             </Suspense>
         </>
       )}
