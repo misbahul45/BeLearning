@@ -18,7 +18,7 @@ const Header = ({ user }: Props) => {
 
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
-    setIsShow(scrollY > 0);
+    setIsShow(scrollY > 20);
   }, []);
 
   useEffect(() => {

@@ -33,15 +33,15 @@ const ArticlePagination = ({ search, tag }: Props) => {
     fetchCountArticles();
   }, [search, tag]);
 
+  if (countArticles<=6) {
+    return null;
+  }
+
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
-
-  if (totalPages === 1) {
-    return null;
-  }
 
   const renderPageNumbers = () => {
     const pageNumbers = [];

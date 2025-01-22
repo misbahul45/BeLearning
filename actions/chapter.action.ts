@@ -28,7 +28,7 @@ export const createChapterAction = async (courseId: string, slug: string) => {
 export const deleteChapterAction = async (chapterId: string, slug: string) => {
     try {
         await prisma.$transaction([
-            prisma.video.delete({
+            prisma.video.deleteMany({
                 where:{
                     chapterId
                 }

@@ -2,6 +2,7 @@
 import prisma from "@/lib/prisma";
 import { update_COURSE } from "@/types/course.types";
 import { CREATE_COURSE } from "@/validations/course.validation";
+import { revalidatePath } from "next/cache";
 
 export const createCourseAction=async(authorId:string,values:CREATE_COURSE)=>{
     try {
@@ -79,14 +80,26 @@ export const updateCourseAction=async(slug:string,values:update_COURSE)=>{
     }
 }
 
-export const publishCourseAction=async(slug:string)=>{
+export const publishCourseAction = async (slug: string, isPublished: boolean) => {
     try {
-        const course=await prisma.course.update({
-            where:{slug:slug as string},
-            data:{isPublished:true}
-        })
-        return course;
-    } catch {
-        throw new Error("Failed to publish course");
+      const course = isPublished?await prisma.course.update({
+        where: { slug },
+        data: { isPublished: true },
+        select: {
+            isPublished: true
+        }
+      }):await prisma.course.update({
+        where: { slug },
+        data: { isPublished: false },
+        select: {
+            isPublished: true
+        }
+      })
+      if(!course) throw new Error("Failed to publish course");
+      revalidatePath(`/course/create/${slug}`);
+      return course;
+    } catch (error) {
+      console.log(error);
+      throw new Error(`Failed to publish course: ${(error as Error).message}`);
     }
-}
+  };

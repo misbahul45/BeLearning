@@ -20,35 +20,40 @@ type PageProps = {
 
 const Page = async ({ params }: PageProps) => {
   const { slug } = await params;
-  const course = await prisma.course.findUnique({
-    where: { slug },
-    include: {
-      category: {
-        select:{
-          name: true
-        }
-      },
-      cover: {
-        select: {
-          url: true,
-          fileId: true,
+  let course;
+  try {
+    course = await prisma.course.findUnique({
+      where: { slug },
+      include: {
+        category: {
+          select:{
+            name: true
+          }
+        },
+        cover: {
+          select: {
+            url: true,
+            fileId: true,
+          },
+        },
+        resources:{
+          select: {
+            id: true,
+            title: true,
+            url: true,
+          }
+        },
+        chapters: {
+          select:{
+            id: true,
+            title: true,
+          }
         },
       },
-      resources:{
-        select: {
-          id: true,
-          title: true,
-          url: true,
-        }
-      },
-      chapters: {
-        select:{
-          id: true,
-          title: true,
-        }
-      },
-    },
-  });
+    });
+  } catch{
+   console.log("error")
+  }
 
   if (!course) {
     redirect('/course/create');

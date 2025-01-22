@@ -30,8 +30,7 @@ const page = async ({ searchParams }: PageProps) => {
     <div className='w-full max-w-6xl mx-auto ms:px-0 px-2 py-2'>
       {(isTagOrSearchPresent || page > 1) && (
           <p className='mb-4 md:text-2xl text-lg font-semibold text-gray-400'>
-            Result for 
-            <span className='text-gray-800'>
+            Result for <span className='text-gray-800'>
               {(tag && search) ? `${tag} & ${search}` : tag || search}
             </span>
             {page > 1 && (

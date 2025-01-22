@@ -4,6 +4,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { publishCourseAction } from '@/actions/course.action';
 import toast from 'react-hot-toast';
+import Loader from '@/components/Loaders/Loader';
 
 interface PublishCourseProps {
   slug: string;
@@ -14,13 +15,17 @@ interface PublishCourseProps {
 }
 
 const PublishCourse: React.FC<PublishCourseProps> = ({ slug, course }) => {
-  const onSubmit = async (e: React.FormEvent) => {
+  const [isPending, startTransition] = React.useTransition();
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-        await  publishCourseAction(slug);
-    } catch (error) {
-        toast.error((error as Error).message); 
-    }
+    startTransition(async () => {
+      try {
+          const result=await publishCourseAction(slug, !course?.isPublished);
+          toast.success(`Course ${result.isPublished ? 'published' : 'unpublished'} successfully!`);
+      } catch (error) {
+          toast.error((error as Error).message); 
+      }
+    })
   };
 
   return (
@@ -31,7 +36,11 @@ const PublishCourse: React.FC<PublishCourseProps> = ({ slug, course }) => {
         variant={course?.isPublished ? 'outline' : 'default'}
         className="min-w-28"
       >
-        {course?.isPublished ? 'Unpublish' : 'Publish'}
+        {isPending?
+          <Loader />
+          :
+          course.isPublished ? 'Unpublish' : 'Publish'
+        }
       </Button>
     </form>
   );

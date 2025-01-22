@@ -3,9 +3,15 @@ import { type SearchParams } from 'nuqs/server'
 import ListCategory from '@/components/browse/ListCategory'
 import { searchParamsCache } from '@/lib/nuqs'
 import { getCategoryAction } from '@/actions/category.action'
+import { Metadata } from 'next'
 
 type PageProps = {
   searchParams: Promise<SearchParams>
+}
+
+export const metadata:Metadata={
+  title:"Be Learning | courses",
+  description:"Semua kursus yang anada butuhkan"
 }
 
 const Page = async ({ searchParams }: PageProps) => {

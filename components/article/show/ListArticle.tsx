@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import React from 'react'
 import ListItemArticle from './ListItemArticle'
 import ArticlePagination from './ArticlePagination'
+import Link from 'next/link'
 
 interface Props {
   page: number
@@ -58,6 +59,25 @@ const ListArticle = async ({ page, search, tag }: Props) => {
       .map(article => article.slug)
   )
 
+  if (articles.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full py-10 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          No Articles Found
+        </h2>
+        <p className="text-gray-600 text-center mb-6">
+          There are currently no articles available. Check back later or start exploring other sections!
+        </p>
+        <Link 
+        href={'/article'}
+          className="px-6 py-2 text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-all duration-150"
+        >
+          Explore More
+        </Link>
+      </div>
+    );
+  }
+  
   return (
     <>
       <div className='grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-1.5'>
