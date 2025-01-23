@@ -139,12 +139,16 @@ model TagsArticle {
 }
 
 model ArticleComments {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  article   Article  @relation(fields: [articleId], references: [id])
-  articleId String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  comment   String
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  article   Article           @relation(fields: [articleId], references: [id])
+  articleId String            @db.ObjectId
+  user      User              @relation(fields: [userId], references: [id])
+  userId    String            @db.ObjectId
+  message   String
+  parentId  String?  @db.ObjectId
+  parent    ArticleComments?  @relation("ParentChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children  ArticleComments[] @relation("ParentChildren")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

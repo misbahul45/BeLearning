@@ -58,7 +58,7 @@ const ListCourses = async ({ search, category }: Props) => {
           name: true,
         },
       },
-      updatedAt: true,
+      createdAt: true,
     },
   });
 
@@ -68,7 +68,7 @@ const ListCourses = async ({ search, category }: Props) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {courses.map((course) => (
-        <Card key={course.title} className="group hover:shadow-lg transition-shadow duration-200">
+        <Card key={course.title} className="group hover:shadow-lg transition-all duration-200 p-2.5 rounded-lg border-2 hover:border-gray-300">
           <CardHeader className="p-0 relative">
             <div className="relative h-48 w-full">
               <Image
@@ -109,7 +109,7 @@ const ListCourses = async ({ search, category }: Props) => {
                 />
                 <span className="text-sm text-gray-600">{course.author?.username || 'Unknown Author'}</span>
                 </div>
-                <p className='text-xs text-gray-300'>{course.updatedAt.toLocaleDateString('en-US', { day:'numeric', month:'long', year:'numeric' })}</p>
+                <p className='text-xs text-gray-600'>{course.createdAt.toLocaleDateString('en-US', { day:'numeric', month:'long', year:'numeric' })}</p>
             </div>
             
             <div className="mt-4 flex items-center gap-2">
@@ -121,7 +121,7 @@ const ListCourses = async ({ search, category }: Props) => {
             </div>
 
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-lg font-bold text-blue-600">
+              <p className="text-sm font-bold text-gray-600">
                 {course.price.toLocaleString('id-ID', {
                   style: 'currency',
                   currency: 'IDR'
