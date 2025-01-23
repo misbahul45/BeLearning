@@ -2,6 +2,7 @@ import { getArticleAction } from '@/actions/article.action'
 import { getUserAction } from '@/actions/user.action'
 import BookmarkPost from '@/components/article/show/BorkmarkPost'
 import ButtonTag from '@/components/article/show/ButtonTag'
+import CommentSidebar from '@/components/article/show/CommentSidebar'
 import LovePost from '@/components/article/show/LovePost'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -73,11 +74,11 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
 
   const isSaved = article && user? article.saves.some((save) => save.userId === user.id):false
   const isLiked = article && user? article.likes.some((like) => like.likedBy === user.id):false
+  const isComment = article && user? article.comments.some((comment) => comment.userId === user.id):false
 
   return (
     <article className="min-h-screen bg-gray-50">
       <div className="relative w-full max-w-4xl mx-auto px-4 py-8">
-        {/* Back Button */}
         <Button
           asChild
           variant="ghost"
@@ -88,9 +89,8 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </Link>
         </Button>
 
-        {/* Article Header */}
         <header className="space-y-8 mb-12">
-          <h1 className="text-center font-bold md:text-5xl text-3xl text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
+          <h1 className="text-center font-bold md:text-4xl text-2xl text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
             {article.title}
           </h1>
           
@@ -126,7 +126,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </Card>
         </header>
 
-        {/* Cover Image */}
         {article.cover?.url && (
           <div className="relative aspect-video mb-12">
             <Image
@@ -138,7 +137,7 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </div>
         )}
 
-        {/* Article Content */}
+
         <div className="prose prose-lg max-w-none mb-12">
           <div
             className="px-4"
@@ -146,7 +145,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           />
         </div>
 
-        {/* Tags */}
         <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
           <h3 className="font-medium text-gray-700 mb-3">Tags</h3>
           <div className="flex flex-wrap gap-2">
@@ -156,10 +154,19 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </div>
         </div>
 
-        {/* Interaction Buttons */}
-        <div className="flex gap-4 justify-center">
-          <BookmarkPost userId={user?.id || ''} slug={slug} isSaved={isSaved} />
-          <LovePost userId={user?.id || ''} slug={slug} isLoved={isLiked} />
+        <div className="flex gap-4 px-4 items-center">
+          <div className="flex gap-3 items-center bg-outline runded shadow py-2 ppx-4">
+            <BookmarkPost size='lg' userId={user?.id || ''} slug={slug} isSaved={isSaved} />
+            <p className="text-sm text-gray-700">{article.saves.length} Users saved</p>
+          </div>
+          <div className="flex gap-3 items-center bg-secondary runded shadow py-2 px-4">
+            <LovePost size='lg' userId={user?.id || ''} slug={slug} isLoved={isLiked} />
+            <p className="text-sm text-gray-700">{article.likes.length} Users loved</p>
+          </div>
+          <div className="flex gap-3 items-center bg-secondary runded shadow py-2 px-4">
+            <CommentSidebar size='lg' isComment={isComment} />
+            <p className="text-sm text-gray-700">{article.comments.length} Comments</p>
+          </div>
         </div>
       </div>
     </article>

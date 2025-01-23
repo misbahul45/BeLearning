@@ -44,12 +44,13 @@ const Header = ({ user }: Props) => {
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-
+ 
   if (
     (SIDE_LIST.some((item) => item.path.includes(pathName)) && pathName !== '/') ||
     pathName.includes('/profile') ||
     pathName.includes('/course') ||
-    pathName.includes('/dashboard')
+    pathName.includes('/dashboard') ||
+    pathName.includes('/browse')
   ) {
     return null;
   }

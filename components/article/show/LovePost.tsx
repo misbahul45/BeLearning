@@ -8,9 +8,10 @@ interface Props {
   userId: string;
   slug: string;
   isLoved: boolean;
+  size?:'sm'|'lg'
 }
 
-const LovePost = ({ userId, slug, isLoved }: Props) => {
+const LovePost = ({ userId, slug, isLoved, size='sm' }: Props) => {
   const handleLikePost = () => {
     return likeArticleAction(slug, userId);
   }
@@ -34,13 +35,13 @@ const LovePost = ({ userId, slug, isLoved }: Props) => {
         )}
       >
         {isPending ? (
-          <Loader2 className="sm:size-5 size-3 animate-spin text-gray-600" />
+          <Loader2 className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'}  animate-spin text-gray-600`} />
         ) : (
           <>
             {isLoved ? (
-              <Love className="sm:size-5 size-3 text-white" />
+              <Love className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'}  text-white`} />
             ) : (
-              <Love className="sm:size-5 size-3 text-rose-500" />
+              <Love className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'}  text-rose-500`} />
             )}
           </>
         )}

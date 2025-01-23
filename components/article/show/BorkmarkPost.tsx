@@ -8,9 +8,10 @@ interface Props {
   userId: string;
   slug: string;
   isSaved: boolean;
+  size?:'sm'|'lg'
 }
 
-const BookmarkPost = ({ userId, slug, isSaved }: Props) => {
+const BookmarkPost = ({ userId, slug, isSaved, size='sm' }: Props) => {
   const handleSaveArticle = () => {
     return saveArticleAction(slug, userId);
   }
@@ -34,13 +35,13 @@ const BookmarkPost = ({ userId, slug, isSaved }: Props) => {
         )}
       >
         {isPending ? (
-          <Loader2 className="sm:size-5 size-3 animate-spin text-gray-600" />
+          <Loader2 className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'} animate-spin text-gray-600`} />
         ) : (
           <>
             {isSaved ? (
-              <Bookmark className="sm:size-5 size-3 text-white" />
+              <Bookmark className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'} text-white`} />
             ) : (
-              <BookmarkPlus className="sm:size-5 size-3 text-indigo-600" />
+              <BookmarkPlus className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'} text-indigo-600`} />
             )}
           </>
         )}

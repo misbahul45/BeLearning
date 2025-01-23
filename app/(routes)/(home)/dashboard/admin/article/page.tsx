@@ -17,13 +17,9 @@ const headtable = [
   { id: 4, name: 'Action' },
 ];
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 15;
 
-type PageProps = {
-  searchParams: Promise<SearchParams>;
-};
-
-const Page = async ({ searchParams }: PageProps) => {
+const Page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
   const { page = 1, article, orderBy } = await searchParamsCache.parse(searchParams);
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
@@ -43,99 +39,138 @@ const Page = async ({ searchParams }: PageProps) => {
     });
 
     return (
-      <div className="p-4">
-        <SearchAdminArticle />
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {headtable.map((item) => (
-                <TableHead
-                  className={clsx('text-center', item.name === 'Title' && 'text-left')}
-                  key={item.id}
-                >
-                  {item.name}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {articles.map((article, index) => (
-              <TableRow key={article.slug}>
-                <TableCell className="text-center font-semibold text-sm px-3.5 py-2 rounded-md">
-                  {skip + index + 1}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-start gap-2 w-full max-w-xl">
-                    <Image
-                      src={article.cover?.url || '/placeholder.jpg'}
-                      alt={article.title || 'No Title'}
-                      width={100}
-                      height={100}
-                      className="object-cover size-16"
-                    />
-                    <div className="space-y-1 w-full">
-                      <div className="flex gap-2">
-                        <p className="font-semibold">{article.title}</p>
-                      </div>
-                      <div className="flex gap-6 items-center">
-                        <p className="text-sm text-gray-400">
-                          By <span className="font-semibold text-black">{article.author?.username || 'Unknown'}</span>
-                        </p>
-                        <p>
-                          {new Date(article.updatedAt).toLocaleDateString('en-US', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                          })}
-                        </p>
-                        <p className='text-sm text-nowrap text-gray-400'>View :<span className='font-semibold text-black'>{article.viewCount}</span></p>
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div
-                    className={`text-xs text-center ${
-                      article.status === 'PUBLISHED'
-                        ? 'text-green-600 bg-green-200 p-1.5 rounded'
-                        : article.status === 'APPROVED'
-                        ? 'bg-yellow-200 text-yellow-600 p-1.5 rounded'
-                        : 'bg-red-200 text-red-600 p-1.5 rounded'
-                    }`}
+      <div className="p-2 md:p-4 space-y-4 md:space-y-6">
+        <div className="mb-4 md:mb-6">
+          <SearchAdminArticle />
+        </div>
+        
+        <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  {headtable.map((item) => (
+                    <TableHead
+                      className={clsx(
+                        'text-center font-medium text-gray-700 px-2 md:px-4',
+                        item.name === 'Title' && 'text-left',
+                        item.name === 'No' && 'w-12 md:w-16',
+                        item.name === 'Status' && 'w-24 md:w-32',
+                        item.name === 'Action' && 'w-16 md:w-24'
+                      )}
+                      key={item.id}
+                    >
+                      {item.name}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {articles.map((article, index) => (
+                  <TableRow 
+                    key={article.slug}
+                    className="hover:bg-gray-50/50 transition-colors"
                   >
-                    {article.status}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/dashboard/admin/article/${article.slug}`}>
-                    <Button size={'icon'}>
-                      <BookOpenCheckIcon />
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="flex justify-between items-center mt-4">
+                    <TableCell className="text-center font-medium text-gray-600 text-xs md:text-sm px-2 md:px-4">
+                      {skip + index + 1}
+                    </TableCell>
+                    <TableCell className="px-2 md:px-4">
+                      <div className="flex items-start gap-2 md:gap-4 py-2">
+                        <div className="relative flex-shrink-0">
+                          <Image
+                            src={article.cover?.url || '/placeholder.jpg'}
+                            alt={article.title || 'No Title'}
+                            width={100}
+                            height={100}
+                            className="object-cover rounded-lg size-16 md:size-20"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1 space-y-1 md:space-y-2">
+                          <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900">
+                            {article.title}
+                          </h3>
+                          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+                            <p className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
+                              By <span className="font-medium text-gray-900">{article.author?.username || 'Unknown'}</span>
+                            </p>
+                            <p className="text-xs md:text-sm text-gray-500 hidden md:block">•</p>
+                            <p className="text-xs md:text-sm text-gray-500">
+                              {new Date(article.updatedAt).toLocaleDateString('en-US', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                              })}
+                            </p>
+                            <p className="text-xs md:text-sm text-gray-500 hidden md:block">•</p>
+                            <p className="text-xs md:text-sm text-gray-500">
+                              <span className="font-medium text-gray-900">{article.viewCount}</span> views
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-2 md:px-4">
+                      <div
+                        className={clsx(
+                          'text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full text-center inline-block w-full max-w-20 md:max-w-24',
+                          {
+                            'bg-green-100 text-green-700': article.status === 'PUBLISHED',
+                            'bg-yellow-100 text-yellow-700': article.status === 'APPROVED',
+                            'bg-red-100 text-red-700': article.status === 'DRAFT'
+                          }
+                        )}
+                      >
+                        {article.status}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-2 md:px-4">
+                      <div className="flex justify-center">
+                        <Link href={`/dashboard/admin/article/${article.slug}`}>
+                          <Button 
+                            size="icon"
+                            variant="ghost"
+                            className="size-8 md:size-10 hover:bg-gray-100"
+                          >
+                            <BookOpenCheckIcon className="size-4 md:size-5" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center mt-4 md:mt-6 px-2">
           <Link
             href={`?page=${page > 1 ? page - 1 : 1}`}
-            className={clsx('px-4 py-2 bg-gray-200 rounded', page === 1 && 'opacity-50 pointer-events-none')}
+            className={clsx(
+              'px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors',
+              page === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            )}
           >
             Previous
           </Link>
-          <p className="text-sm font-semibold">Page {page}</p>
+          <p className="text-xs md:text-sm font-medium text-gray-700">Page {page}</p>
           <Link
             href={`?page=${parseInt(page +'', 10) + 1}`}
-            className={clsx('px-4 py-2 bg-gray-200 rounded')}
+            className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs md:text-sm font-medium transition-colors"
           >
             Next
           </Link>
         </div>
       </div>
     );
-  } catch{
-    return <div className="p-4 text-red-500">Failed to load articles. Please try again later.</div>;
+  } catch {
+    return (
+      <div className="p-4 rounded-lg bg-red-50 text-red-500 text-sm">
+        Failed to load articles. Please try again later.
+      </div>
+    );
   }
 };
 

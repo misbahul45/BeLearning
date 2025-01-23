@@ -8,19 +8,16 @@ import React from 'react'
 import AcceptArticle from '../../../../../../../components/dashboard/admin/AcceptArticle'
 interface Props{
     params: Promise<{
-        slug:string
-    }>
+      slug:string
+  }>
     searchParams: Promise<SearchParams>
 }
 
 export async function generateMetadata(props: Props) {
-  const params = await props.params;
-  const {
-    slug
-  } = params;
-
+  const slug=(await props.params).slug
+  const article=await getArticleAction(slug)
   return {
-    title:'Be Learning Blog Admin |'+slug,
+    title:article?.title,
   }
 }
 

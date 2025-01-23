@@ -8,16 +8,14 @@ import { redirect } from 'next/navigation';
 import { type SearchParams } from 'nuqs';
 import React from 'react';
 
-type PageProps = {
-  searchParams:Promise<SearchParams>
-  params:{
-    slug:string
-  }
-}
 
-const Page = async({ searchParams,params }: PageProps) => {
-  const { slug } = await params;
-  const { chapterId }=await searchParamsCache.parse(searchParams);
+type Params = Promise<{
+  slug: string
+}>
+
+const Page = async(props:{ searchParams:Promise<SearchParams> ,params:Params }) => {
+  const slug = (await props.params).slug ;
+  const { chapterId }=await searchParamsCache.parse(props.searchParams);
   if(!chapterId){
     redirect(`/course/create/${slug}`)
   }
