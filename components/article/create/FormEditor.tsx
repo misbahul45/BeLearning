@@ -9,6 +9,7 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Link from "@tiptap/extension-link";
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
+import Placeholder from "@tiptap/extension-placeholder";
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -29,6 +30,11 @@ export default function RichTextEditor({
             codeBlock: false,
             paragraph: false,
         }),
+            Placeholder.configure({
+              placeholder:'Write something...',
+              showOnlyWhenEditable:false,
+              emptyNodeClass:'text-muted-foreground'
+            }),
             Underline,
             Heading,
             BulletList.configure({ 

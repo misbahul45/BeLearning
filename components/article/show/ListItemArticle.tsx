@@ -46,7 +46,7 @@ const ListItemArticle = ({ slug, cover, title, author, createdAt, tags, viewCoun
           })}</p>
         </div>
         <div className="flex flex-col justify-between">
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
                 {tags.map((tags, i)=>(
                     <ButtonTag key={i} tag={tags.tags.tag} className='bg-orange-500 text-white hover:bg-orange-600 text-xs px-2 rounded' />
                 ))}

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
+import { getUserAction } from "@/actions/user.action";
+import { Card } from "@/components/ui/card";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -9,14 +9,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { auth } from "@/lib/auth";
 import { MessageCircleIcon } from "lucide-react"
+import Image from "next/image";
+import FormComment from "../create/FormComment";
 
 interface Props{
   size?:'sm'|'lg';
   isComment:boolean
 }
 
-export default function CommentSidebar({size='sm',isComment}:Props) {
+export default async function CommentSidebar({size='sm',isComment}:Props) {
+  const session=await auth()
+  let user;
+
+  if(session){
+    user=await getUserAction(session?.user.email as string,{image:true, username:true})
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -27,20 +37,26 @@ export default function CommentSidebar({size='sm',isComment}:Props) {
               <MessageCircleIcon className={`${size==='sm'?'sm:size-5 size-3':'sm:size-7 size-5'}`} />
           </button>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when 
-          </SheetDescription>
+      <SheetContent className="overflow-auto [scrollbar-width:thin]">
+        <SheetHeader className="mb-4">
+          <div className="flex justifybetween items-center">
+            <SheetTitle className="text-xl font-bold">Comments</SheetTitle>
+          </div>
+         {user && (
+          <Card className="flex items-center gap-2 p-2.5">
+            <Image src={user.profile?.image.url || ''} alt={user.username || 'User Profile Picture'} width={100} height={100} className="size-9 rounded-full shadow" />
+            <p className="text-sm font-semibold text-gray-600">@{user.username}</p>
+          </Card>
+         )}
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-
+        <FormComment />
+        <div className="min-h-screen p-4">
+ 
         </div>
         <SheetFooter>
-          <SheetClose asChild>
-            <Button>Close</Button>
-          </SheetClose>
+          <SheetDescription>
+              Response here
+          </SheetDescription>
         </SheetFooter>
       </SheetContent>
     </Sheet>

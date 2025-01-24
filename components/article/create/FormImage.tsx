@@ -1,30 +1,27 @@
 'use client';
-import React, {  useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { deleteImage, uploadImage } from '@/actions/web.action';
-import { CloudUploadIcon, ImageUpIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
+import { CloudUploadIcon, ImageUpIcon, LoaderIcon, Trash2Icon, SparklesIcon } from 'lucide-react';
 import { sleep } from '@/lib/utils';
-import Loader from '@/components/Loaders/Loader';
 import { Button } from '@/components/ui/button';
 import { Image as TypeImage } from '@/types/web.types';
 import WEB_VALIDATION from '@/validations/web.validation';
-
-
+import { motion } from 'framer-motion';
 
 interface FormImageProps {
   image: TypeImage | null,
   setImage: React.Dispatch<React.SetStateAction<TypeImage | null>>;
 }
 
-
 const FormImage = ({ image, setImage }: FormImageProps) => {
   const [loading, setLoading] = useState({
     type: '',
     status: false
   });
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleRemoveImage = async () => {
     try {
@@ -48,88 +45,117 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
       const res = await uploadImage(file);
       if (res?.url) {
         toast.success("Image uploaded successfully!");
-        const imageURL=WEB_VALIDATION.URL.safeParse({url:res.url})
+        const imageURL = WEB_VALIDATION.URL.safeParse({url:res.url})
         if(imageURL.success){
           setImage(res);
         }
       } else {
         toast.error("Image upload failed.");
       }
-    } catch (error) {
-      if(error){
-        toast.error("Image upload failed. Please try again.");
-      }
+    } catch{
+      toast.error("Image upload failed. Please try again.");
     }
     setLoading({ type: '', status: false });
   };
 
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
-      <Card className="border-none">
-        <CardContent className="p-6 space-y-4">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative border-4 border-gray-300 w-full max-w-xl mx-auto md:min-h-81 h-56 rounded-lg shadow-md">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-xl mx-auto"
+    >
+      <Card className="border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <CardContent className="p-4 space-y-4">
+          <div className="relative group">
+            <div className="border-4 border-dashed border-gray-300 dark:border-gray-600 w-full aspect-video rounded-lg overflow-hidden transition-all duration-300 group-hover:border-primary/50">
               {image?.url ? (
-                <Image
-                  src={image.url}
-                  alt="User Avatar"
-                  fill
-                  className="object-cover rounded-lg"
-                />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative w-full h-full"
+                >
+                  <Image
+                    src={image.url}
+                    alt="Uploaded Image"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <SparklesIcon className="text-white w-12 h-12 animate-pulse" />
+                  </div>
+                </motion.div>
               ) : (
-                <div className="w-full md:h-72 h-56 flex items-center rounded-lg justify-center bg-gray-100 text-gray-500">
-                    <ImageUpIcon className="md:size-20 size-12" />
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 space-y-3">
+                  <ImageUpIcon className="w-16 h-16 opacity-50" />
+                  <p className="text-sm font-medium text-center">No image selected</p>
                 </div>
               )}
             </div>
+          </div>
 
+          <div className="flex justify-center space-x-4">
             {image?.url ? (
               <Button
                 variant="destructive"
-                className="flex items-center space-x-2"
+                className="group flex items-center space-x-2"
                 onClick={handleRemoveImage}
-                type="button"
                 disabled={loading.status}
               >
                 {loading.status && loading.type === 'remove' ? (
-                  <Loader />
+                  <div className="flex items-center">
+                    <LoaderIcon className="mr-2 animate-spin" />
+                    Removing...
+                  </div>
                 ) : (
                   <>
-                    <Trash2Icon className="h-5 w-5" />
+                    <Trash2Icon className="h-5 w-5 group-hover:rotate-6 transition-transform" />
                     <span>Remove Image</span>
                   </>
                 )}
               </Button>
             ) : (
-              <div>
-                <label
-                  htmlFor="image-upload"
-                  className="cursor-pointer flex flex-col items-center text-gray-600 hover:text-primary transition"
-                >
-                  {loading.status && loading.type === 'upload' ? (
-                    <LoaderIcon className="h-10 w-10 text-primary animate-spin" />
-                  ) : (
-                    <>
-                      <CloudUploadIcon className="h-10 w-10 mb-2" />
-                      <span className="text-sm font-medium">Upload Image Cover</span>
-                    </>
-                  )}
-                </label>
-                <input
-                  type="file"
-                  id="image-upload"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      handleUploadImage(e.target.files[0]);
-                    }
-                  }}
-                />
-              </div>
+              <Button 
+                variant="outline" 
+                type='button'
+                className="group flex items-center space-x-2"
+                onClick={triggerFileInput}
+                disabled={loading.status}
+              >
+                {loading.status && loading.type === 'upload' ? (
+                  <div className="flex items-center">
+                    <LoaderIcon className="mr-2 animate-spin" />
+                    Uploading...
+                  </div>
+                ) : (
+                  <>
+                    <CloudUploadIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    <span>Upload Image</span>
+                  </>
+                )}
+              </Button>
             )}
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  handleUploadImage(e.target.files[0]);
+                }
+              }}
+            />
           </div>
         </CardContent>
       </Card>
+    </motion.div>
   );
 };
 

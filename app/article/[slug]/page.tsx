@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { type SearchParams } from 'nuqs'
 import React from 'react'
+import Backroute from './_Component/Backroute'
 
 interface Props {
   params: Promise<{
@@ -79,18 +80,10 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
   return (
     <article className="min-h-screen bg-gray-50">
       <div className="relative w-full max-w-4xl mx-auto px-4 py-8">
-        <Button
-          asChild
-          variant="ghost"
-          className="absolute left-4 top-8 md:left-0"
-        >
-          <Link href="/article">
-            <ArrowLeft className="md:h-6 md:w-6 h-4 w-4" />
-          </Link>
-        </Button>
+        <Backroute />
 
         <header className="space-y-8 mb-12">
-          <h1 className="text-center font-bold md:text-4xl text-2xl text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
+          <h1 className="text-center font-bold md:text-3xl text-2xl text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
             {article.title}
           </h1>
           

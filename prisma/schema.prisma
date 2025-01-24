@@ -83,7 +83,7 @@ model Cover {
   url    String
   fileId String
 
-  article   Article @relation(fields: [articleId], references: [id])
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId String  @unique @db.ObjectId
 
   createdAt DateTime @default(now())
@@ -96,7 +96,7 @@ model Article {
   content   String
   slug      String        @unique
   cover     Cover?
-  author    User          @relation(fields: [authorId], references: [id])
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String        @db.ObjectId
   status    ArticleStatus @default(DRAFT)
   viewCount Int           @default(0)
@@ -145,7 +145,7 @@ model ArticleComments {
   user      User              @relation(fields: [userId], references: [id])
   userId    String            @db.ObjectId
   message   String
-  parentId  String?  @db.ObjectId
+  parentId  String?           @db.ObjectId
   parent    ArticleComments?  @relation("ParentChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children  ArticleComments[] @relation("ParentChildren")
 
