@@ -159,7 +159,7 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
             <p className="text-sm text-gray-700">{article.likes.length} Users loved</p>
           </div>
           <div className="flex gap-3 items-center bg-secondary runded shadow py-2 px-4">
-            <CommentSidebar size='lg' isComment={isComment} articleId={article.id} />
+            <CommentSidebar size='lg' isComment={isComment} articleId={article.id} authorId={article.author.id} />
             <p className="text-sm text-gray-700">{article.comments.length} Comments</p>
           </div>
         </div>

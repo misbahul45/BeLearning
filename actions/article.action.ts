@@ -159,6 +159,7 @@ export const getArticleAction = async (slug:string) => {
                 },
                 author:{
                     select:{
+                        id:true,
                         username:true,
                         profile:{
                             select:{

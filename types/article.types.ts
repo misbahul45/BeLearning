@@ -41,4 +41,5 @@ export interface COMMENT{
     articleId?:string;
     userId?:string;
     parentId?:string | null;
+    createdAt: Date;
 }

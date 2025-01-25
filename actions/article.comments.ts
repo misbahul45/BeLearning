@@ -5,7 +5,6 @@ import { CREATE_COMMENT_ARTICLE } from "@/types/article.types";
 
 export const createArticleCommentAction=async(values:CREATE_COMMENT_ARTICLE)=>{
     try {
-        console.log(values);
         if(!values.message) return null;
         await prisma.articleComments.create({
             data:{
@@ -24,9 +23,10 @@ export const getArticleCommentsAction=async(articleId:string)=>{
         if(!articleId) return null;
         const comments=await prisma.articleComments.findMany({
             where:{articleId},
-            include:{
+            select:{
                 user:{
                     select:{
+                        id:true,
                         username:true,
                         profile:{
                             select:{
@@ -39,6 +39,12 @@ export const getArticleCommentsAction=async(articleId:string)=>{
                         }
                     }
                 },
+                userId:true,
+                createdAt:true,
+                id:true,
+                parentId:true,
+                message:true
+
             },
             orderBy:{createdAt:"desc"}
         })

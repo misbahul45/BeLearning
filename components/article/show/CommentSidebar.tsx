@@ -12,15 +12,14 @@ import {
 import { auth } from "@/lib/auth";
 import { MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
-import FormComment from "../create/FormComment";
 import { getArticleCommentsAction } from "@/actions/article.comments";
-import ItemComent from "./ItemComent";
-import { ArticleComments } from "@prisma/client";
+import ListComments from "./ListComments";
 
 interface Props {
   size?: "sm" | "lg";
   isComment: boolean;
   articleId: string;
+  authorId: string;
 }
 
 interface USER {
@@ -33,21 +32,22 @@ interface USER {
   } | null;
 }
 
-export default async function CommentSidebar({ size = "sm", isComment, articleId }: Props) {
+export default async function CommentSidebar({ size = "sm", isComment, articleId, authorId }: Props) {
   const session = await auth();
   let user: USER | null = null;
-  let comments:Partial<ArticleComments>[] | null = [];
 
   if (session) {
     try {
-      [user, comments] = await Promise.all([
+      [user] = await Promise.all([
         getUserAction(session?.user.email as string, { id: true, image: true, username: true }),
-        getArticleCommentsAction(articleId),
+
       ]);
     } catch {
       console.log("error");
     }
   }
+
+  const comments=await getArticleCommentsAction(articleId)
 
   return (
     <Sheet>
@@ -81,21 +81,7 @@ export default async function CommentSidebar({ size = "sm", isComment, articleId
             </Card>
           )}
         </SheetHeader>
-        <div className="w-full flex flex-col gap-2">
-          <FormComment articleId={articleId} userId={user?.id || ""} />
-          <div className="min-h-screen">
-            {comments?.map((comment) => (
-              <ItemComent
-                key={comment.id}
-                isAuthor={comment.userId === user?.id}
-                message={comment.message}
-                articleId={comment.articleId}
-                userId={comment.userId}
-                parentId={comment.parentId}
-              />
-            ))}
-          </div>
-        </div>
+         <ListComments comments={comments} articleId={articleId} user={{id:user?.id}} authorId={authorId} />
         <SheetFooter>
           <SheetDescription>Response here</SheetDescription>
         </SheetFooter>

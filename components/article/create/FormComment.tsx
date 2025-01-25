@@ -32,6 +32,7 @@ const FormComment = ({articleId, userId}: Props) => {
     extensions: [
       StarterKit.configure({
         paragraph: false,
+        text: false,
       }),
       Placeholder.configure({
         placeholder:'Write a comment...'
