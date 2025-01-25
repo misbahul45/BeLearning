@@ -13,7 +13,7 @@ const PostersArticle = async({page}:{page:number}) => {
   if(page>1){
     return null
   }
-    const articles=await getArticlesAction({ slug: true, title: true, content: true, cover: true, tags: true, updatedAt: true, save:true, by:'DESC', take:6, status:"ALL" });
+    const articles=await getArticlesAction({ slug: true, title: true, status: 'PUBLISHED', author: true ,content: true, cover: true, tags: true, updatedAt: true, save:true, by:'DESC', take:6, });
   return (
     <div>
         <Poster articles={articles as ArticleWithRelations[]} />

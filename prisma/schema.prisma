@@ -151,8 +151,6 @@ model ArticleComments {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([articleId, userId])
 }
 
 model ArticleLike {

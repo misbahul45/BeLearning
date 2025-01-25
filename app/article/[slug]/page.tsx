@@ -43,12 +43,14 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
   let article;
 
   try {
-    user = await getUserAction(session?.user.email as string, { email: true, id: true })
-    article = await getArticleAction(slug)
+    [user, article] = await Promise.all([
+      await getUserAction(session?.user.email as string, { email: true, id: true }),
+      await getArticleAction(slug)
+    ])
   } catch{
     console.log("error")
   }
-  
+
   if (!user) {
     return redirect('/login')
   }
@@ -157,7 +159,7 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
             <p className="text-sm text-gray-700">{article.likes.length} Users loved</p>
           </div>
           <div className="flex gap-3 items-center bg-secondary runded shadow py-2 px-4">
-            <CommentSidebar size='lg' isComment={isComment} />
+            <CommentSidebar size='lg' isComment={isComment} articleId={article.id} />
             <p className="text-sm text-gray-700">{article.comments.length} Comments</p>
           </div>
         </div>

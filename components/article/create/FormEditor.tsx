@@ -10,6 +10,7 @@ import Link from "@tiptap/extension-link";
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
 import Placeholder from "@tiptap/extension-placeholder";
+import { useEffect } from "react";
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -39,20 +40,20 @@ export default function RichTextEditor({
             Heading,
             BulletList.configure({ 
               HTMLAttributes:{
-                class: 'list-disc'
+                class: 'list-disc mb-1'
               }
             }),
             OrderedList.configure({ 
               HTMLAttributes:{
-                class: 'list-decimal mb-2'
+                class: 'list-decimal mb-1'
               }
             }),
             CodeBlock.configure({
               exitOnTripleEnter: true,
               exitOnArrowDown: true,
-              defaultLanguage: "plaintext",
+              defaultLanguage:"plain",
               HTMLAttributes: {
-                class: "rounded-md p-4 bg-slate-700 text-white my-4 overflow-x-auto",
+                class: "rounded-lg p-3 bg-gradient-to-tr from-gray-800 via-slate-900 to-gray-800 text-white my-4 overflow-x-auto shadow-lg text-sm",
               }
             }),
             Link.configure({
@@ -63,12 +64,12 @@ export default function RichTextEditor({
             }),
             Image.configure({
               HTMLAttributes: {
-                class: "rounded-md w-full max-w-4xl mx-auto my-4"
+                class: "rounded-md hadow-lg w-auto h-auto object-cover mx-auto mb-2"
               }
             }),
             Paragraph.configure({
               HTMLAttributes: {
-                class: "my-2 md:text-lg text-base" 
+                class: "mb-4 md:text-medium text-base leading-6" 
               }
             }),
         ],
@@ -85,7 +86,11 @@ export default function RichTextEditor({
     });
 
 
-
+    useEffect(() => {
+      if (initialContent) {
+        editor?.commands.setContent(initialContent);
+      }
+    }, [editor, initialContent]);
   
     return (
         <div className="space-y-2">

@@ -29,3 +29,16 @@ export interface GET_ARTICLE {
     tag?:string;
     by?:'ASC' | 'DESC'|'COMMENTS' | 'VIEWS' | 'SAVES';
 }
+
+export interface CREATE_COMMENT_ARTICLE {
+    message: string;
+    userId: string;
+    articleId: string;
+}
+
+export interface COMMENT{
+    message?:string;
+    articleId?:string;
+    userId?:string;
+    parentId?:string | null;
+}

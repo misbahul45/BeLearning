@@ -47,7 +47,7 @@ const page = async({params}:Props) => {
       </div>
         <Image src={article?.cover?.url || ''} alt={'image'+article?.title} width={200} height={200} className="object-cover w-full max-w-xl mx-auto rounded-lg shadow-md" />
         <div
-          className='px-4 my-6'
+          className='prose prose-md max-w-none'
             dangerouslySetInnerHTML={{ __html: article?.content || '' }}
         />
         <Separator />
