@@ -34,9 +34,11 @@ export interface CREATE_COMMENT_ARTICLE {
     message: string;
     userId: string;
     articleId: string;
+    parentId?:string
 }
 
 export interface COMMENT{
+    commentId?:string;
     message?:string;
     articleId?:string;
     userId?:string;

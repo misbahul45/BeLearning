@@ -35,25 +35,23 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
   const { slug } = await params
   const session = await auth()
   
-  if (!session?.user?.email) {
-    return redirect('/login')
-  }
-  
   let user;
   let article;
-
+  
+  if(session){
+    try {
+      user = await getUserAction(session?.user.email as string, { email: true, id: true });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  }
+  
   try {
-    [user, article] = await Promise.all([
-      await getUserAction(session?.user.email as string, { email: true, id: true }),
-      await getArticleAction(slug)
-    ])
-  } catch{
-    console.log("error")
+    article = await getArticleAction(slug);
+  } catch (error) {
+    console.error("Error fetching article:", error);
   }
-
-  if (!user) {
-    return redirect('/login')
-  }
+  
 
   const { tag } = await searchParamsCache.parse(searchParams)
 

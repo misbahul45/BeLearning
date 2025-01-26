@@ -12,8 +12,6 @@ import {
 import { auth } from "@/lib/auth";
 import { MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
-import { getArticleCommentsAction } from "@/actions/article.comments";
-import ListComments from "./ListComments";
 
 interface Props {
   size?: "sm" | "lg";
@@ -47,8 +45,6 @@ export default async function CommentSidebar({ size = "sm", isComment, articleId
     }
   }
 
-  const comments=await getArticleCommentsAction(articleId)
-
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -81,9 +77,13 @@ export default async function CommentSidebar({ size = "sm", isComment, articleId
             </Card>
           )}
         </SheetHeader>
-         <ListComments comments={comments} articleId={articleId} user={{id:user?.id}} authorId={authorId} />
-        <SheetFooter>
-          <SheetDescription>Response here</SheetDescription>
+        <div></div>
+        <SheetFooter
+          className="flex justify-between items-center"
+        >
+          <SheetDescription className="text-sm text-gray-600">
+            {comments.length} comments
+          </SheetDescription>
         </SheetFooter>
       </SheetContent>
     </Sheet>

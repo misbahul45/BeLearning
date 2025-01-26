@@ -17,16 +17,21 @@ import { useRouter } from 'next/navigation'
 
 interface Props{
   articleId: string
-  userId: string
+  userId?: string;
+  parentId?:string;
+  setReplay?:React.Dispatch<React.SetStateAction<string>>
 }
 
-const FormComment = ({articleId, userId}: Props) => {
-  const [showForm, setShowForm] = useState(false)
+const FormComment = ({articleId, userId, parentId, setReplay}: Props) => {
+  const [showForm, setShowForm] = useState(parentId?true : false)
   const [comment, setComment] = useState('')
   const [linkUrl, setLinkUrl] = useState('')
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [isPending, startTransition] = React.useTransition();
   const router=useRouter()
+
+
+  console.log(parentId)
 
   const editor = useEditor({
     extensions: [
@@ -71,8 +76,9 @@ const FormComment = ({articleId, userId}: Props) => {
         await sleep()
         await createArticleCommentAction({
           message: comment,
-          userId,
-          articleId
+          userId: userId || '',
+          articleId,
+          parentId
         })
         toast.success('Comment sent successfully')
         setComment('')
@@ -107,7 +113,6 @@ const FormComment = ({articleId, userId}: Props) => {
       setIsLinkModalOpen(false);
     }
   };
-
   return (
     <div className='w-full'>
       {showForm ? 
@@ -193,6 +198,7 @@ const FormComment = ({articleId, userId}: Props) => {
               type='button'
               onClick={()=>{
                 setComment('')
+                setReplay?.('')
                 setShowForm(false)
               }}
               className="hover:bg-gray-200"
@@ -215,14 +221,15 @@ const FormComment = ({articleId, userId}: Props) => {
           </div>
         </form>
       :
-        <div onClick={()=>setShowForm(true)} className={`items-center justify-between flex cursor-pointer p-2 border-2 rounded-lg`}> 
-          <p className='text-muted-foreground text-sm'>What are your thoughts?</p>
-          <Button
-            variant={'secondary'}
-          >
-            Comment
-          </Button>
-        </div>
+        !parentId &&
+          <div onClick={()=>setShowForm(true)} className={`items-center justify-between flex cursor-pointer p-2 border-2 rounded-lg`}> 
+            <p className='text-muted-foreground text-sm'>What are your thoughts?</p>
+            <Button
+              variant={'secondary'}
+            >
+              Comment
+            </Button>
+          </div>
       }
     </div>
   )
