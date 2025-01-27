@@ -12,12 +12,15 @@ import {
 import { auth } from "@/lib/auth";
 import { MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
+import ListComments from "./ListComments";
+import FormComment from "../create/FormComment";
 
 interface Props {
   size?: "sm" | "lg";
   isComment: boolean;
   articleId: string;
   authorId: string;
+  slug: string
 }
 
 interface USER {
@@ -30,7 +33,7 @@ interface USER {
   } | null;
 }
 
-export default async function CommentSidebar({ size = "sm", isComment, articleId, authorId }: Props) {
+export default async function CommentSidebar({ size = "sm", isComment, articleId, authorId, slug }: Props) {
   const session = await auth();
   let user: USER | null = null;
 
@@ -44,6 +47,8 @@ export default async function CommentSidebar({ size = "sm", isComment, articleId
       console.log("error");
     }
   }
+
+
 
   return (
     <Sheet>
@@ -77,12 +82,15 @@ export default async function CommentSidebar({ size = "sm", isComment, articleId
             </Card>
           )}
         </SheetHeader>
-        <div></div>
+        <div className="space-y-3">
+          <FormComment slug={slug} articleId={articleId} userId={user?.id}  />
+          <ListComments slug={slug} articleId={articleId} articleAuthorId={authorId} userLogin={{ id:user?.id }} />
+        </div>
         <SheetFooter
-          className="flex justify-between items-center"
+          className="flex justify-between items-center mt-2.5"
         >
           <SheetDescription className="text-sm text-gray-600">
-            {comments.length} comments
+            Article Comments          
           </SheetDescription>
         </SheetFooter>
       </SheetContent>

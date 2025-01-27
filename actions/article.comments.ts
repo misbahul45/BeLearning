@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { CREATE_COMMENT_ARTICLE } from "@/types/article.types";
+import { revalidatePath } from "next/cache";
 
 export const createArticleCommentAction=async(values:CREATE_COMMENT_ARTICLE)=>{
     try {
@@ -14,6 +15,7 @@ export const createArticleCommentAction=async(values:CREATE_COMMENT_ARTICLE)=>{
                 ...(values.parentId && {parentId:values.parentId})
             }
         })
+        revalidatePath(`/article/${values.slug}`);
     } catch{
         throw new Error("Failed to create comment");
     }
@@ -55,8 +57,9 @@ export const getArticleCommentsAction = async (
             orderBy: { createdAt: "desc" },
         });
 
-        const sendBackComment=comments.filter((c)=>c.parentId===null);
-        return sendBackComment;
+        const sendBackComment=comments.filter((c)=>c.parentId===null)
+
+        return sendBackComment
 
     } catch (error) {
         console.error('Error fetching comments:', error);

@@ -9,7 +9,6 @@ export interface CREATE_ARTICLE {
     cover:Image
 }
 
-
 export interface GET_ARTICLE {
     id?:boolean; 
     status?:'DRAFT' | 'PUBLISHED' | 'APPROVED' | "ALL";
@@ -34,14 +33,29 @@ export interface CREATE_COMMENT_ARTICLE {
     message: string;
     userId: string;
     articleId: string;
-    parentId?:string
+    parentId?:string;
+    slug:string
 }
 
-export interface COMMENT{
-    commentId?:string;
-    message?:string;
-    articleId?:string;
-    userId?:string;
-    parentId?:string | null;
+interface ProfileImage {
+    url?: string;
+}
+
+interface Profile {
+    image: ProfileImage;
+}
+
+interface User {
+    id: string;
+    username: string;
+    profile?: Profile;
+}
+
+export interface Comment {
+    user: User;
+    userId: string;
     createdAt: Date;
+    id: string;
+    parentId: string | null;
+    message: string;
 }

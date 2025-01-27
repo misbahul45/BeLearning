@@ -16,6 +16,9 @@ import { redirect } from 'next/navigation'
 import { type SearchParams } from 'nuqs'
 import React from 'react'
 import Backroute from './_Component/Backroute'
+import prisma from '@/lib/prisma'
+import ListComments from '@/components/article/show/ListComments'
+import FormComment from '@/components/article/create/FormComment'
 
 interface Props {
   params: Promise<{
@@ -26,8 +29,9 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params
+  const article = await prisma.article.findUnique({where:{slug},select:{title:true}})
   return {
-    title: `Be Learning Blog | ${slug}`,
+    title: `Be Learning Blog | ${article?.title}`,
   }
 }
 
@@ -79,7 +83,7 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
 
   return (
     <article className="min-h-screen bg-gray-50">
-      <div className="relative w-full max-w-4xl mx-auto px-4 py-8">
+      <div className="relative w-full max-w-4xl mx-auto px-4 py-8 space-y-4">
         <Backroute />
 
         <header className="space-y-8 mb-12">
@@ -137,16 +141,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
             dangerouslySetInnerHTML={{ __html: article.content || '' }}
           />
         </div>
-
-        <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
-          <h3 className="font-medium text-gray-700 mb-3">Tags</h3>
-          <div className="flex flex-wrap gap-2">
-            {article.tags.map((tag, i) => (
-              <ButtonTag key={i} tag={tag.tags.tag} />
-            ))}
-          </div>
-        </div>
-
         <div className="flex gap-4 px-4 items-center">
           <div className="flex gap-3 items-center bg-outline runded shadow py-2 ppx-4">
             <BookmarkPost size='lg' userId={user?.id || ''} slug={slug} isSaved={isSaved} />
@@ -157,10 +151,22 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
             <p className="text-sm text-gray-700">{article.likes.length} Users loved</p>
           </div>
           <div className="flex gap-3 items-center bg-secondary runded shadow py-2 px-4">
-            <CommentSidebar size='lg' isComment={isComment} articleId={article.id} authorId={article.author.id} />
+            <CommentSidebar slug={slug} size='lg' isComment={isComment} articleId={article.id} authorId={article.author.id} />
             <p className="text-sm text-gray-700">{article.comments.length} Comments</p>
           </div>
         </div>
+
+        <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
+          <h3 className="font-medium text-gray-700 mb-3">Tags</h3>
+          <div className="flex flex-wrap gap-2">
+            {article.tags.map((tag, i) => (
+              <ButtonTag key={i} tag={tag.tags.tag} />
+            ))}
+          </div>
+        </div>
+
+        <FormComment slug={slug} articleId={article.id} userId={user?.id} />
+        <ListComments slug={slug} articleId={article.id} articleAuthorId={article.author.id} userLogin={{ id: user?.id }} />
       </div>
     </article>
   )
