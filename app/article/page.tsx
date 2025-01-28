@@ -26,7 +26,6 @@ const page = async ({ searchParams }: PageProps) => {
   const isTagOrSearchPresent = (tag && tag.trim() !== '') || (search && search.trim() !== '')
 
   return (
-<<<<<<< HEAD
     <div className='w-full max-w-6xl mx-auto ms:px-0 px-2 py-2'>
       {(isTagOrSearchPresent || page > 1) && (
           <p className='mb-4 md:text-2xl text-lg font-semibold text-gray-400'>
@@ -41,23 +40,6 @@ const page = async ({ searchParams }: PageProps) => {
             )}
           </p>
         )}
-=======
-    <div className="w-full max-w-6xl mx-auto ms:px-0 px-2 py-2">
-      {(isTagOrSearchPresent || page > 1) && (
-        <p className="mb-4 md:text-2xl text-lg font-semibold text-gray-400">
-          Result for{' '}
-          <span className="text-gray-800">
-            {(tag && search) ? `${tag} & ${search}` : tag || search}
-          </span>
-          {page > 1 && (
-            <>
-              {isTagOrSearchPresent && <span className="text-gray-800"> & </span>}
-              Page <span className="text-gray-800">{page}</span>
-            </>
-          )}
-        </p>
-      )}
->>>>>>> master
 
       {!isTagOrSearchPresent && (
         <>

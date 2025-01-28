@@ -1,4 +1,4 @@
-
+'use client'
 import { Button } from '@/components/ui/button'
 import { parseAsString, useQueryState } from 'nuqs'
 import React from 'react'
@@ -10,8 +10,8 @@ const ButtonTag = ({tag}:{tag:string}) => {
     }))
     console.log(tagData)
   return (
-    <Button onClick={()=>setTagData(tag)} type='button' className={`text-nowrap hover:rotate-2 transition-all duration-100`}>
-        {tag} + {tagData}
+    <Button onClick={()=>setTagData(tag)} type='button'>
+        {tag}
     </Button>
   )
 }

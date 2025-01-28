@@ -1,5 +1,5 @@
 import DialogResource from '@/components/course/create/DialogResources';
-import ItemResouce from '@/components/course/create/ItemResouce';
+import ItemResource from '@/components/course/create/ItemResouce';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
@@ -7,18 +7,16 @@ import { ArrowLeft, BookOpen, FileText, GraduationCap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import React from 'react';
 import CreateChapter from '@/components/course/create/CreateChapter';
 import ItemChapter from '@/components/course/create/ItemChapter';
 import PublishCourse from '@/components/course/create/PublishCourse';
 
+type PageProps = {
+  params: { slug: string };
+};
 
-type Params= Promise<{
-  slug: string;
-}>;
-
-const Page= async (props: { params: Params}) => {
-  const { slug } =await props.params;
+const Page = async ({ params }: PageProps) => {
+  const { slug } = params;
 
   if (!slug) {
     redirect('/course/create');
@@ -30,79 +28,16 @@ const Page= async (props: { params: Params}) => {
     course = await prisma.course.findUnique({
       where: { slug },
       include: {
-        category: {
-          select: {
-            name: true,
-          },
-        },
-        cover: {
-          select: {
-            url: true,
-            fileId: true,
-          },
-        },
-        resources: {
-          select: {
-            id: true,
-            title: true,
-            url: true,
-          },
-        },
-        chapters: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
+        category: { select: { name: true } },
+        cover: { select: { url: true } },
+        resources: { select: { id: true, title: true, url: true } },
+        chapters: { select: { id: true, title: true } },
       },
     });
   } catch (error) {
     console.error('Error fetching course:', error);
+    throw new Error('Failed to fetch course data.');
   }
-const Page = async ({ params }: PageProps) => {
-  try {
-    const { slug } = params;
-    
-    if (!slug) {
-      console.error('No slug provided');
-      redirect('/course/create');
-    }
-
-    let course;
-    try {
-      course = await prisma.course.findUnique({
-        where: { slug },
-        include: {
-          category: {
-            select: {
-              name: true
-            }
-          },
-          cover: {
-            select: {
-              url: true,
-              fileId: true,
-            },
-          },
-          resources: {
-            select: {
-              id: true,
-              title: true,
-              url: true,
-            }
-          },
-          chapters: {
-            select: {
-              id: true,
-              title: true,
-            }
-          },
-        },
-      });
-    } catch (dbError) {
-      console.error('Database error:', dbError);
-      throw new Error('Failed to fetch course data');
-    }
 
   if (!course) {
     redirect('/course/create');
@@ -135,31 +70,6 @@ const Page = async ({ params }: PageProps) => {
           </div>
           <p className="text-sm text-gray-500">Complete all fields to publish your course</p>
         </div>
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="p-4 w-full max-w-5xl mx-auto">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-3">
-                <Link href={`/course/create?update=${slug}`}>
-                  <button className="hover:bg-gray-100 p-2 rounded-full transition-colors">
-                    <ArrowLeft className="text-gray-600" />
-                  </button>
-                </Link>
-                <h1 className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-violet-600 to-blue-600">
-                  Course Setup
-                </h1>
-              </div>
-              <PublishCourse
-                slug={slug}
-                course={{
-                  chapters: course.chapters.length,
-                  isPublished: course.isPublished
-                }}
-              />
-            </div>
-            <p className="text-sm text-gray-500">Complete all fields to publish your course</p>
-          </div>
 
         {/* Course Details */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-4">
@@ -172,7 +82,10 @@ const Page = async ({ params }: PageProps) => {
               <div className="p-2 bg-orange-500 text-orange-200 rounded-full text-xs shadow hover:scale-105 hover:text-white hover:font-semibold transition-all duration-300">
                 {course.price === 0
                   ? 'Free'
-                  : course.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                  : course.price.toLocaleString('id-ID', {
+                      style: 'currency',
+                      currency: 'IDR',
+                    })}
               </div>
             </div>
           </div>
@@ -180,7 +93,7 @@ const Page = async ({ params }: PageProps) => {
           <div className="relative w-full h-[400px]">
             <Image
               src={course.cover?.url || ''}
-              alt={'image-' + course.title}
+              alt={`image-${course.title}`}
               fill
               className="rounded-lg shadow-lg object-cover"
               priority
@@ -190,32 +103,6 @@ const Page = async ({ params }: PageProps) => {
             <div dangerouslySetInnerHTML={{ __html: course.description || '' }} />
           </div>
         </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-4">
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-3xl font-semibold text-center mb-6">{course?.title}</h2>
-              <div className="flex gap-4">
-                <div className="p-2 bg-primary text-blue-200 rounded-full text-xs shadow hover:scale-105 hover:text-white hover:font-semibold transition-all duration-300">
-                  {course.category.name}
-                </div>
-                <div className="p-2 bg-orange-500 text-orange-200 rounded-full text-xs shadow hover:scale-105 hover:text-white hover:font-semibold transition-all duration-300">
-                  {course.price === 0 ? "Free" : course.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
-                </div>
-              </div>
-            </div>
-
-            <div className="relative w-full h-[400px]">
-              <Image
-                src={course?.cover?.url || ''}
-                alt={'image-' + course?.title}
-                fill
-                className="rounded-lg shadow-lg object-cover"
-                priority
-              />
-            </div>
-            <div className="prose max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: course?.description || '' }} />
-            </div>
-          </div>
 
         <Separator className="my-8" />
 
@@ -251,7 +138,7 @@ const Page = async ({ params }: PageProps) => {
                 <FileText className="size-5 text-blue-500" />
                 Resources
               </CardTitle>
-              <DialogResource courseId={course.id || ''} slug={course.slug || ''} />
+              <DialogResource courseId={course.id} slug={slug} />
             </CardHeader>
             <CardContent>
               <div className="space-y-2 border rounded-lg p-2">
@@ -262,7 +149,7 @@ const Page = async ({ params }: PageProps) => {
                   </div>
                 ) : (
                   course.resources.map((item) => (
-                    <ItemResouce
+                    <ItemResource
                       key={item.id}
                       id={item.id}
                       title={item.title ?? ''}

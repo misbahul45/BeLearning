@@ -132,7 +132,7 @@ const EditUser = ({ user }: Props) => {
             )}
           />
           <Button
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            disabled={!form.formState.isValid || form.formState.isSubmitting || !image}
             type="submit"
             className="font-semibold w-full py-6 flex items-center justify-center"
           >

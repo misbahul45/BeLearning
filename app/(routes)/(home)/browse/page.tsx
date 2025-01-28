@@ -18,7 +18,6 @@ const Page = async ({ searchParams }: PageProps) => {
   const { search, category } = await searchParamsCache.parse(searchParams);
   const categories = await getCategoryAction();
 
-  // Capitalize each word in the category
   const categoryCapitalized = category
     ? category
         .split(' ')

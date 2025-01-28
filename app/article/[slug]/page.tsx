@@ -15,14 +15,10 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { type SearchParams } from 'nuqs'
 import React from 'react'
-<<<<<<< HEAD
 import Backroute from './_Component/Backroute'
 import prisma from '@/lib/prisma'
 import ListComments from '@/components/article/show/ListComments'
 import FormComment from '@/components/article/create/FormComment'
-=======
-import toast from 'react-hot-toast'
->>>>>>> master
 
 interface Props {
   params: Promise<{
@@ -138,12 +134,13 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </div>
         )}
 
-        <div className="prose prose-lg max-w-none mb-12">
-          <div
-            className="px-4"
+        <div>
+          <div    
+            className="prose prose-lg max-w-none mb-12"
             dangerouslySetInnerHTML={{ __html: article.content || '' }}
           />
         </div>
+        
         <div className="flex gap-4 px-4 items-center">
           <div className="flex gap-3 items-center bg-outline runded shadow py-2 ppx-4">
             <BookmarkPost size='lg' userId={user?.id || ''} slug={slug} isSaved={isSaved} />

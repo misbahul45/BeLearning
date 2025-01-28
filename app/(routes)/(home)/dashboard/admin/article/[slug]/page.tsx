@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { type SearchParams } from 'nuqs'
 import React from 'react'
 import AcceptArticle from '../../../../../../../components/dashboard/admin/AcceptArticle'
+import Backroute from '@/app/article/[slug]/_Component/Backroute'
 interface Props{
     params: Promise<{
       slug:string
@@ -27,7 +28,8 @@ const page = async({params}:Props) => {
 
   return (
     <div className='relatice w-full max-w-5xl mx-auto px-4 py-8'>
-      <h1 className='text-center font-bold md:text-5xl sm:text-4xl text-2xl text-primary mt-4'>{article?.title}</h1>
+      <Backroute />
+      <h1 className='text-center font-bold md:text-3xl sm:text-2xl text-xl text-primary mt-4'>{article?.title}</h1>
       <AcceptArticle slug={slug} />
       <div className="flex gap-4 items-center my-5">
         <div className='flex gap-3 items-center'>
