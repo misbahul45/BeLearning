@@ -2,10 +2,7 @@ import { getArticleAction } from '@/actions/article.action'
 import { getUserAction } from '@/actions/user.action'
 import BookmarkPost from '@/components/article/show/BorkmarkPost'
 import ButtonTag from '@/components/article/show/ButtonTag'
-<<<<<<< HEAD
 import CommentSidebar from '@/components/article/show/CommentSidebar'
-=======
->>>>>>> master
 import LovePost from '@/components/article/show/LovePost'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -36,20 +33,14 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params
-<<<<<<< HEAD
   const article = await prisma.article.findUnique({where:{slug},select:{title:true}})
   return {
     title: `Be Learning Blog | ${article?.title}`,
-=======
-  return {
-    title: `Be Learning Blog | ${slug}`,
->>>>>>> master
   }
 }
 
 const ArticlePage = async ({ params, searchParams }: Props) => {
   const { slug } = await params
-<<<<<<< HEAD
   const session = await auth()
   
   let user;
@@ -70,26 +61,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
   }
   
 
-=======
-  let user;
-
-  try {
-    const session = await auth()
-    user = await getUserAction(session?.user.email as string, { email: true, id: true })
-  }catch{
-    console.log("error")
-  }
-  
-
-  let article;
-
-  try {
-    article=await getArticleAction(slug)
-  } catch (error) {
-    toast.error((error as Error).message)
-  }
-
->>>>>>> master
   const { tag } = await searchParamsCache.parse(searchParams)
 
   if (tag) {
@@ -110,7 +81,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
     )
   }
 
-<<<<<<< HEAD
   const isSaved = article && user? article.saves.some((save) => save.userId === user.id):false
   const isLiked = article && user? article.likes.some((like) => like.likedBy === user.id):false
   const isComment = article && user? article.comments.some((comment) => comment.userId === user.id):false
@@ -122,26 +92,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
 
         <header className="space-y-8 mb-12">
           <h1 className="text-center font-bold md:text-3xl text-2xl text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
-=======
-  const isSaved = user && article?article.saves.some((save) => save.userId === user.id):false
-  const isLiked = user && article?article.likes.some((like) => like.likedBy === user.id):false
-
-  return (
-    <article className="min-h-screen bg-gray-50">
-      <div className="relative w-full max-w-4xl mx-auto px-4 py-8">
-        <Button
-          asChild
-          variant="ghost"
-          className="absolute left-4 top-8 md:left-0"
-        >
-          <Link href="/article">
-            <ArrowLeft className="md:h-6 md:w-6 h-4 w-4" />
-          </Link>
-        </Button>
-
-        <header className="space-y-8 mb-12">
-          <h1 className="text-center font-bold md:text-3xl sm:text-2xl text-xs text-gray-900 mt-12 max-w-3xl mx-auto leading-tight">
->>>>>>> master
             {article.title}
           </h1>
           
@@ -188,17 +138,12 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </div>
         )}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         <div className="prose prose-lg max-w-none mb-12">
           <div
             className="px-4"
             dangerouslySetInnerHTML={{ __html: article.content || '' }}
           />
         </div>
-<<<<<<< HEAD
         <div className="flex gap-4 px-4 items-center">
           <div className="flex gap-3 items-center bg-outline runded shadow py-2 ppx-4">
             <BookmarkPost size='lg' userId={user?.id || ''} slug={slug} isSaved={isSaved} />
@@ -213,8 +158,6 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
             <p className="text-sm text-gray-700">{article.comments.length} Comments</p>
           </div>
         </div>
-=======
->>>>>>> master
 
         <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
           <h3 className="font-medium text-gray-700 mb-3">Tags</h3>
@@ -225,15 +168,8 @@ const ArticlePage = async ({ params, searchParams }: Props) => {
           </div>
         </div>
 
-<<<<<<< HEAD
         <FormComment slug={slug} articleId={article.id} userId={user?.id} />
         <ListComments slug={slug} articleId={article.id} articleAuthorId={article.author.id} userLogin={{ id: user?.id }} />
-=======
-        <div className="flex gap-4 justify-center">
-          <BookmarkPost userId={user?.id || ''} slug={slug} isSaved={isSaved} />
-          <LovePost userId={user?.id || ''} slug={slug} isLoved={isLiked} />
-        </div>
->>>>>>> master
       </div>
     </article>
   )
