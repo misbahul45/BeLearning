@@ -58,4 +58,5 @@ export interface Comment {
     id: string;
     parentId: string | null;
     message: string;
+    children:number
 }

@@ -23,10 +23,11 @@ interface Props {
   parentId: string | null
   message: string
   createdAt: Date;
-  slug: string
+  slug: string;
+  lengthChildren:number;
 }
 
-const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message, createdAt, parentId, slug }: Props) => {
+const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message, createdAt, parentId, slug, lengthChildren }: Props) => {
   const [replayCommentId, setReplayCommentId] = React.useState<string>("")
   const isAuthor = articleAuthorId === user.id
   const timeSinceCreated = formatDistanceToNow(new Date(createdAt), { addSuffix: true })
@@ -66,10 +67,12 @@ const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message,
             <Reply className="h-4 w-4" />
             Reply
           </Button>
+          {lengthChildren>0&&(
           <Button onClick={() => setShowReplay(!showReplay)} variant={showReplay ? "default" : "ghost"} size="sm" className="flex items-center gap-2">
             <MessageCircle className="h-4 w-4" />
             {showReplay ? "Hide" : "Replies"}
           </Button>
+          )}
         </div>
         {replayCommentId === id && (
           <FormComment slug={slug} articleId={articleId} userId={userLogin?.id} parentId={id} setReplay={setReplayCommentId} />

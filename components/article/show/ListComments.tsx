@@ -24,6 +24,7 @@ const ListComments = ({ articleId, articleAuthorId, userLogin, parentId, slug }:
     },
   })
 
+  console.log(data)
 
   if (isLoading) {
      return <ArticleCommentsLoader />
@@ -54,6 +55,7 @@ const ListComments = ({ articleId, articleAuthorId, userLogin, parentId, slug }:
           userLogin={userLogin}
           articleId={articleId}
           slug={slug}
+          lengthChildren={comment.children.length}
         />
       ))}
     </div>

@@ -1,5 +1,4 @@
 'use server'
-
 import prisma from "@/lib/prisma";
 import { CREATE_COMMENT_ARTICLE } from "@/types/article.types";
 import { revalidatePath } from "next/cache";
@@ -53,7 +52,14 @@ export const getArticleCommentsAction = async (
             where: {
                 articleId,
             },
-            select: baseCommentSelect,
+            select: {
+                ...baseCommentSelect,
+                children:{
+                  select:{
+                    _count:true
+                  }
+                }
+            },
             orderBy: { createdAt: "desc" },
         });
 
@@ -95,7 +101,14 @@ export const getSubCommentsAction = async (parentId: string) => {
             where: {
                parentId
             },
-            select: baseCommentSelect,
+            select:{
+                ...baseCommentSelect,
+                children:{
+                    select:{
+                      _count:true
+                    }
+                  }
+            },
             orderBy: { createdAt: "desc" },
         });
 
