@@ -168,17 +168,6 @@ export const getArticleAction = async (slug:string) => {
                         }
                     }
                 },
-                saves:{
-                    select:{
-                        userId:true
-                    }
-                },
-                likes:{
-                    select:{
-                        likedBy:true
-                    }
-                },
-                
             }
         });
 
