@@ -32,7 +32,6 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
       await sleep();
       if (image?.fileId) await deleteImage(image.fileId);
       setImage(null);
-      toast.success("Image removed successfully!");
     } catch{
       setImage(null);
     }

@@ -8,7 +8,7 @@ export const createChapterAction = async (courseId: string, slug: string) => {
     
         const chapter = await prisma.chapter.create({
             data: {
-                courseId
+                courseId,
             },
             select: {
                 id: true

@@ -19,19 +19,36 @@ const Page = async ({ params }: PageProps) => {
   const { slug } = params;
 
   if (!slug) {
-    redirect('/course/create');
-    return null;
+   return redirect('/course/create');
   }
 
   let course;
   try {
-    course = await prisma.course.findUnique({
-      where: { slug },
-      include: {
+  course = await prisma.course.findUnique({
+      where: { 
+        slug,
+      },
+      select: {
+        id: true,
+        isPublished: true,
+        title: true,
+        description: true,
+        price: true,
+        createdAt: true,
         category: { select: { name: true } },
         cover: { select: { url: true } },
-        resources: { select: { id: true, title: true, url: true } },
-        chapters: { select: { id: true, title: true } },
+        resources: {
+          select: { id: true, title: true, url: true },
+          orderBy: { createdAt: 'asc' }
+        },
+        chapters: {
+          select: { 
+            id: true, 
+            title: true,
+            description: true,
+          },
+          orderBy: { createdAt: 'asc' }
+        },
       },
     });
   } catch (error) {

@@ -89,8 +89,8 @@ const ListCourses = async ({ search, category }: Props) => {
             </div>
           </CardHeader>
           <CardContent className="p-4">
-            <div className="flex items-start justify-between gap-4">
-              <Link href={`/browse/${course.slug}`} className="text-lg font-semibold text-gray-500 line-clamp-2 flex-1 hover:text-gray-800 transition-all duration-100">
+            <div className="flex flex-col gap-2">
+              <Link href={`/browse/${course.slug}`} className="text-sm font-semibold text-gray-500 line-clamp-2 flex-1 hover:text-gray-800 transition-all duration-100">
                 {course.title}
               </Link>
               <Badge variant="secondary" className="shrink-0">
@@ -128,7 +128,7 @@ const ListCourses = async ({ search, category }: Props) => {
                 })}
               </p>
               <Button className="px-6">
-                Enroll Now
+                Buy Now
               </Button>
             </div>
           </CardContent>
