@@ -168,6 +168,17 @@ export const getArticleAction = async (slug:string) => {
                         }
                     }
                 },
+                saves:{
+                    select:{
+                        userId:true
+                    }
+                },
+                likes:{
+                    select:{
+                        likedBy:true
+                    }
+                },
+                
             }
         });
 
@@ -321,3 +332,43 @@ export const rejectArticleAction=async(slug:string)=>{
 }
 
 
+
+export const getPartArticle = async (util: "BOOKMARK" | "LOVE" | "COMMENTS", articleId: string) => {
+  try {
+    let result: number = 0;
+
+    switch (util) {
+      case "BOOKMARK":
+        result = await prisma.articleSaveByUser.count({
+          where: {
+            articleId,
+          },
+        });
+        break;
+
+      case "LOVE":
+        result = await prisma.articleLike.count({
+          where: {
+            articleId,
+          },
+        });
+        break;
+
+      case "COMMENTS":
+        result = await prisma.articleComments.count({
+          where: {
+            articleId,
+          },
+        });
+        break;
+
+      default:
+        throw new Error("Invalid utility type");
+    }
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to retrieve article data");
+  }
+};

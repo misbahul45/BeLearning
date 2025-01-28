@@ -16,7 +16,11 @@ const SearchArticle = ({ tags }: Props) => {
     const [isFocused, setIsFocused] = useState(false)
     const [search, setSearch] = useQueryState('search', parseAsString.withDefault('').withOptions({ shallow: false }))
     const [tagData, setTag] = useQueryState('tag', parseAsString.withDefault('').withOptions({ shallow: false }))
+<<<<<<< HEAD
     const [,setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({ shallow: false }))
+=======
+    const [,setPage]=useQueryState('page', parseAsInteger.withDefault(1).withOptions({ shallow: false }))
+>>>>>>> master
     const tagsContainerRef = React.useRef<HTMLDivElement>(null)
     const tagRefs = React.useRef<Map<string, HTMLButtonElement>>(new Map())
 
@@ -33,6 +37,7 @@ const SearchArticle = ({ tags }: Props) => {
     }
 
     const handleSearchByTag = (value: string) => {
+      setPage(1);
       const targetButton = tagRefs.current.get(value)
       setPage(1)
 

@@ -1,30 +1,19 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
-import React from 'react';
-import { useRouter } from 'next/navigation';
 
-const ButtonTag = ({ tag, className }: { tag: string; className?: string }) => {
-  const router = useRouter();
-  const [, setTag] = useQueryState('tag', parseAsString.withDefault('').withOptions({ shallow: false, history: 'push' }));
-  const [, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({ shallow: false }));
+import { Button } from '@/components/ui/button'
+import { parseAsString, useQueryState } from 'nuqs'
+import React from 'react'
 
-  const handleToggleTag = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // Update query state
-    setPage(1);
-    setTag(tag);
-
-    // Ensure navigation to /article
-    router.push(`/article?tag=${encodeURIComponent(tag)}`);
-  };
-
+const ButtonTag = ({tag}:{tag:string}) => {
+    const [tagData, setTagData]=useQueryState('tag', parseAsString.withDefault('').withOptions({
+        shallow: false,
+        history:'push'
+    }))
+    console.log(tagData)
   return (
-    <Button onClick={handleToggleTag} type="button" className={`transition-all duration-100 ${className} lg:text-sm text-xs`}>
-      {tag}
+    <Button onClick={()=>setTagData(tag)} type='button' className={`text-nowrap hover:rotate-2 transition-all duration-100`}>
+        {tag} + {tagData}
     </Button>
-  );
-};
+  )
+}
 
-export default ButtonTag;
+export default ButtonTag
