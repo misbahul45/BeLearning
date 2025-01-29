@@ -12,11 +12,11 @@ import ItemChapter from '@/components/course/create/ItemChapter';
 import PublishCourse from '@/components/course/create/PublishCourse';
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 const Page = async ({ params }: PageProps) => {
-  const { slug } = params;
+  const  slug = (await params).slug;
 
   if (!slug) {
    return redirect('/course/create');
