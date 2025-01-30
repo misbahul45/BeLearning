@@ -10,7 +10,6 @@ import Link from "@tiptap/extension-link";
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
 import Placeholder from "@tiptap/extension-placeholder";
-import { useEffect } from "react";
 
 type TextEditorProps = {
     onChange: (content: string) => void;
@@ -85,12 +84,6 @@ export default function RichTextEditor({
         immediatelyRender: false,
     });
 
-
-    useEffect(() => {
-      if (initialContent) {
-        editor?.commands.setContent(initialContent);
-      }
-    }, [editor, initialContent]);
   
     return (
         <div className="space-y-2">

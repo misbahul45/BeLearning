@@ -1,12 +1,11 @@
 "use client"
 import type React from "react"
 import { useState } from "react"
-import { Send } from "lucide-react"
+import { MessageSquare, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast"
 import { createArticleCommentAction } from "@/actions/article.comments"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import LinkModal from "./LinkModal"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import dynamic from "next/dynamic"
 
@@ -15,17 +14,18 @@ interface Props {
   userId?: string
   parentId?: string
   setReplay?: React.Dispatch<React.SetStateAction<string>>,
-  slug: string
+  slug: string;
 }
 
 
-const RichTextEditor = dynamic(() => import("./RichTextEditorComments"), { ssr: false })
+const RichTextEditor = dynamic(() => import("./RichTextEditorComments"), { 
+  ssr: false,
+  loading: () => <div className="h-32 animate-pulse bg-muted" />
+})
 
 const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, slug }) => {
-  const [showForm, setShowForm] = useState(!parentId)
+  const [showForm, setShowForm] = useState(false)
   const [comment, setComment] = useState("")
-  const [linkUrl, setLinkUrl] = useState("")
-  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
 
   const queryClient = useQueryClient()
 
@@ -35,11 +35,10 @@ const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, 
       toast.success("Comment sent successfully")
       setComment("")
       setShowForm(false)
-      if (parentId) {
-        queryClient.invalidateQueries({ queryKey: ["subComments", parentId] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ["articleComments", articleId] })
-      }
+      const queryKey = parentId 
+        ? ["subComments", parentId]
+        : ["articleComments", articleId]
+      queryClient.invalidateQueries({ queryKey })
     },
     onError: (error: unknown) => {
       toast.error((error as Error).message)
@@ -58,14 +57,6 @@ const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, 
     })
   }
 
-  const addLink = () => {
-    if (linkUrl) {
-      setComment((prev) => prev + `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkUrl}</a>`)
-      setLinkUrl("")
-      setIsLinkModalOpen(false)
-    }
-  }
-
   if (!showForm && !parentId) {
     return (
       <Card className="w-full">
@@ -73,9 +64,12 @@ const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, 
           <Button
             onClick={() => setShowForm(true)}
             variant="outline"
-            className="w-full justify-start text-muted-foreground"
+            size={"lg"}
+            className="w-full text-muted-foreground flex justify-between"
           >
             What are your thoughts?
+
+            <MessageSquare />
           </Button>
         </CardContent>
       </Card>
@@ -86,7 +80,7 @@ const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, 
     <Card className="w-full">
       <form onSubmit={handleSendComment}>
         <CardContent className="pt-6">
-          <RichTextEditor content={comment} onChange={setComment} onLinkClick={() => setIsLinkModalOpen(true)} />
+          <RichTextEditor content={comment} onChange={setComment} />
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button
@@ -112,13 +106,6 @@ const FormComment: React.FC<Props> = ({ articleId, userId, parentId, setReplay, 
           </Button>
         </CardFooter>
       </form>
-      <LinkModal
-        isOpen={isLinkModalOpen}
-        onClose={() => setIsLinkModalOpen(false)}
-        linkUrl={linkUrl}
-        setLinkUrl={setLinkUrl}
-        onAddLink={addLink}
-      />
     </Card>
   )
 }

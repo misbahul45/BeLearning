@@ -27,14 +27,14 @@ interface Props {
   lengthChildren:number;
 }
 
-const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message, createdAt, parentId, slug, lengthChildren }: Props) => {
+const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message, createdAt, slug, lengthChildren }: Props) => {
   const [replayCommentId, setReplayCommentId] = React.useState<string>("")
   const isAuthor = articleAuthorId === user.id
   const timeSinceCreated = formatDistanceToNow(new Date(createdAt), { addSuffix: true })
   const [showReplay, setShowReplay] = React.useState(false)
 
   return (
-    <div className={`mb-4 ${parentId ? "border-l-2 border-primary/20" : ""} p-2`}>
+    <div className={`mb-4 p-2`}>
       <div className="flex flex-row items-center gap-4 space-y-0 pb-2">
         <Avatar className="h-10 w-10">
           <AvatarImage src={user.profile?.image?.url || "/placeholder.svg"} alt={user.username} />
@@ -67,10 +67,10 @@ const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message,
             <Reply className="h-4 w-4" />
             Reply
           </Button>
-          {lengthChildren>0&&(
-          <Button onClick={() => setShowReplay(!showReplay)} variant={showReplay ? "default" : "ghost"} size="sm" className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4" />
-            {showReplay ? "Hide" : "Replies"}
+          {lengthChildren>=0&&(
+          <Button onClick={() => setShowReplay(!showReplay)} variant={showReplay ? "default" : "ghost"} size="sm" className="flex items-center gap-1">
+            <MessageCircle className="size-2" />
+            {showReplay ? "Hide" : `View`}
           </Button>
           )}
         </div>
@@ -78,7 +78,11 @@ const ItemComment = ({ id, articleAuthorId, articleId, userLogin, user, message,
           <FormComment slug={slug} articleId={articleId} userId={userLogin?.id} parentId={id} setReplay={setReplayCommentId} />
         )}
       </div>
-      {showReplay && <ListComments slug={slug} articleAuthorId={articleAuthorId} userLogin={userLogin} articleId={articleId} parentId={id} />}
+      {showReplay &&(
+        <div className={'border-l-2 border-muted-foreground'}>
+           <ListComments slug={slug} articleAuthorId={articleAuthorId} userLogin={userLogin} articleId={articleId} parentId={id} />
+        </div>
+      )}
     </div>
   )
 }

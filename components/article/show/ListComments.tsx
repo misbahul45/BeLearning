@@ -24,7 +24,6 @@ const ListComments = ({ articleId, articleAuthorId, userLogin, parentId, slug }:
     },
   })
 
-  console.log(data)
 
   if (isLoading) {
      return <ArticleCommentsLoader />
