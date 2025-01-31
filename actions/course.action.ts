@@ -161,7 +161,7 @@ export const publishCourseAction = async (slug: string, isPublished: boolean) =>
                 },
               },
               select: {
-                ...courseSelect
+                ...courseSelect,
               },
               orderBy:{
                 price:'asc'
@@ -238,3 +238,54 @@ export const publishCourseAction = async (slug: string, isPublished: boolean) =>
       throw new Error('Failed to fetch course reviews');
     }
   };
+
+  export const getSavedCoursesAction = async (userId: string, courseId: string) => {
+      try {
+        const savedCourse = await prisma.courseSaveByUser.findUnique({
+          where: {
+            courseId_userId: {
+              courseId: courseId,
+              userId: userId
+            }
+          },
+          select: {
+            id: true
+          }
+        });
+        return savedCourse;
+      } catch {
+        console.log("Failed to save course");
+      }
+  }
+
+  export const saveCourseAction = async (userId: string, courseId: string): Promise<void> => {
+    try {
+        const isSaved=await prisma.courseSaveByUser.findUnique({
+            where: {
+                courseId_userId: {
+                    courseId: courseId,
+                    userId: userId
+                }
+            }
+        });
+        if(isSaved){
+            await prisma.courseSaveByUser.delete({
+                where: {
+                    courseId_userId: {
+                        courseId: courseId,
+                        userId: userId
+                    }
+                }
+            });
+        }else{
+          await prisma.courseSaveByUser.create({
+              data: {
+                  courseId,
+                  userId
+              }
+          });
+        }
+    } catch {
+        console.log("Failed to save course");
+    }
+}

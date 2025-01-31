@@ -321,7 +321,6 @@ export const rejectArticleAction=async(slug:string)=>{
 }
 
 
-
 export const getPartArticle = async (util: "BOOKMARK" | "LOVE" | "COMMENTS", articleId: string) => {
   try {
     let result: number = 0;

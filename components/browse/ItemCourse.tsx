@@ -1,12 +1,15 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import Image from 'next/image'
-import { Share2, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { getReviewCoursesAction } from '@/actions/course.action'
 import ButtonSaveCourses from './ButtonSaveCourses'
+import { getUserAction } from '@/actions/user.action'
+import { auth } from '@/lib/auth'
+import ShareCourse from './ShareCourse'
 
 interface Props{
     id:string
@@ -27,11 +30,19 @@ interface Props{
         } | null
     }
     price:number
-    createdAt:Date
+    createdAt:Date;
+    
 }
 
 const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, author, price, createdAt }) => {
     const { totalReviews, averageRating }=await getReviewCoursesAction({ courseId:id, length:true });
+    const session = await auth();
+   let user;
+
+   if(session){
+    user = await getUserAction(session?.user?.email as string, { id: true });
+   }
+
   return (
     <Card key={title} className="group hover:shadow-lg transition-all duration-200 p-2.5 rounded-lg border-2 hover:border-gray-300">
         <CardHeader className="p-0 relative">
@@ -44,10 +55,8 @@ const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, auth
                 className="w-full h-full object-cover rounded-t-lg"
             />
             <div className="absolute top-2 right-2 flex gap-2">
-                <ButtonSaveCourses />
-                <button className="p-2 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-colors">
-                    <Share2 className="w-4 h-4" />
-                </button>
+                <ButtonSaveCourses courseId={id} userId={user?.id || null} />
+                <ShareCourse />
             </div>
         </div>
         </CardHeader>

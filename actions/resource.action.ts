@@ -19,6 +19,8 @@ export const createResourceAction=async(values:CREATE_RESOURCE)=>{
     }
 }
 
+
+
 export const deleteResourceAction=async(resourceId:string, slug:string)=>{
     try {
         await prisma.resource.deleteMany({
