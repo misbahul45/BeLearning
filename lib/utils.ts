@@ -59,3 +59,10 @@ export function convertToEmbedUrl(url: string) {
     throw new Error('Invalid YouTube URL');
   }
 }
+
+export const formatPrice = (value: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value)
+}

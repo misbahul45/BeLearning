@@ -1,138 +1,60 @@
-import prisma from '@/lib/prisma';
 import React from 'react';
-import { Card, CardHeader, CardContent } from '../ui/card';
-import Image from 'next/image';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Heart, Share2, Star } from 'lucide-react';
-import Link from 'next/link';
+import ItemCourse from './ItemCourse';
+import { getAllCoursesAction } from '@/actions/course.action';
+import { SearchX } from 'lucide-react';
 
-interface Props{
-    search?:string,
-    category?:string
+interface Props {
+  search?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
-const ListCourses = async ({ search, category }: Props) => {
-  const courses = await prisma.course.findMany({
-    where: {
-      isPublished: true,
-     ...(search && {
-        title:{
-            contains: search,
-            mode:'insensitive'
-          },
-     }),
-      ...(category && {
-        category:{
-            name: {
-              equals: category,
-            },
-          }
-      })
-    },
-    select: {
-      slug:true,
-      title: true,
-      cover: {
-        select: {
-          url: true,
-        },
-      },
-      author: {
-        select: {
-          username: true,
-          profile: {
-            select: {
-              image: {
-                select: {
-                  url: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      price: true,
-      category: {
-        select: {
-          name: true,
-        },
-      },
-      createdAt: true,
-    },
-  });
+const ListCourses = async ({ search, category, minPrice, maxPrice }: Props) => {
+  const courses = await getAllCoursesAction(search, category, minPrice, maxPrice);
 
-
-
+  if (courses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
+        <SearchX className="h-16 w-16 text-gray-400 mb-4" />
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          No courses found
+        </h3>
+        <p className="text-gray-500 max-w-md mb-6">
+          {search 
+            ? `We couldn't find any courses matching "${search}"`
+            : category
+            ? `No courses found in the "${category}" category`
+            : "No courses are available at the moment"}
+        </p>
+        <p className="text-gray-500">
+          Try adjusting your search or browse other categories
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {courses.map((course) => (
-        <Card key={course.title} className="group hover:shadow-lg transition-all duration-200 p-2.5 rounded-lg border-2 hover:border-gray-300">
-          <CardHeader className="p-0 relative">
-            <div className="relative h-48 w-full">
-              <Image
-                src={course?.cover?.url || '/api/placeholder/400/300'}
-                alt={course.title}
-                width={400}
-                height={300}
-                className="w-full h-full object-cover rounded-t-lg"
-              />
-              <div className="absolute top-2 right-2 flex gap-2">
-                <button className="p-2 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-colors">
-                  <Heart className="w-4 h-4" />
-                </button>
-                <button className="p-2 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-colors">
-                  <Share2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4">
-            <div className="flex flex-col gap-2">
-              <Link href={`/browse/${course.slug}`} className="text-sm font-semibold text-gray-500 line-clamp-2 flex-1 hover:text-gray-800 transition-all duration-100">
-                {course.title}
-              </Link>
-              <Badge variant="secondary" className="shrink-0">
-                {course.category?.name || 'Uncategorized'}
-              </Badge>
-            </div>
-
-            <div className='flex justify-between items-center'>
-                <div className="mt-3 flex items-center gap-2">
-                <Image
-                    src={course.author.profile?.image?.url || '/api/placeholder/32/32'} 
-                    alt={course.author?.username}
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full"
-                />
-                <span className="text-sm text-gray-600">{course.author?.username || 'Unknown Author'}</span>
-                </div>
-                <p className='text-xs text-gray-600'>{course.createdAt.toLocaleDateString('en-US', { day:'numeric', month:'long', year:'numeric' })}</p>
-            </div>
-            
-            <div className="mt-4 flex items-center gap-2">
-              <div className="flex items-center">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="ml-1 text-sm font-medium">4.8</span>
-              </div>
-              <span className="text-sm text-gray-500">(2.5k reviews)</span>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm font-bold text-gray-600">
-                {course.price.toLocaleString('id-ID', {
-                  style: 'currency',
-                  currency: 'IDR'
-                })}
-              </p>
-              <Button className="px-6">
-                Buy Now
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <ItemCourse 
+          key={course.slug}
+          id={course.id}
+          title={course.title}
+          cover={course.cover ?? { url: '' }}
+          slug={course.slug}
+          category={course.category}
+          author={{
+            username: course.author.username,
+            profile: {
+              image: {
+                url: course.author.profile?.image?.url || ''
+              }
+            }
+          }}
+          price={course.price}
+          createdAt={course.createdAt}
+        />
       ))}
     </div>
   );

@@ -24,7 +24,7 @@ const ListCategory = ({searchCategory, categories}:Props) => {
       targetButton.scrollIntoView({ 
         behavior: 'smooth',
         block: 'nearest',
-        inline: 'center'
+        inline: 'start'
       })
     }
   }

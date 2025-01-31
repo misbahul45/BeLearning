@@ -21,3 +21,14 @@ export interface  update_COURSE{
             id:string
         }
     }
+
+    export interface GET_COURSES_REVIEWS {
+        courseId?: string;
+        rating?: boolean;
+        review?: boolean;
+        by?: 'DESC' | 'ASC';
+        length?: boolean | number;
+        author?: boolean;
+        page?: number;
+        date?: boolean;
+      }

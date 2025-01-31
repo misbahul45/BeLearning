@@ -10,4 +10,6 @@ export const searchParamsCache = createSearchParamsCache({
     chapterId: parseAsString.withDefault(''),
     article: parseAsString.withDefault(''),
     token: parseAsString.withDefault(''),
+    minPrice: parseAsInteger.withDefault(0),
+    maxPrice: parseAsInteger.withDefault(0),
   })
