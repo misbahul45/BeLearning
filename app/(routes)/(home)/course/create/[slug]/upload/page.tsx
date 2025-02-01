@@ -1,3 +1,4 @@
+import ButtonUnlockChapter from '@/components/course/create/ButtonUnlockChapter';
 import FormChapter from '@/components/course/create/FormChapter';
 import { Separator } from '@/components/ui/separator';
 import { searchParamsCache } from '@/lib/nuqs';
@@ -52,12 +53,17 @@ const Page = async(props:{ searchParams:Promise<SearchParams> ,params:Params }) 
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-start justify-between mb-6">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <BookOpen className="size-5 text-blue-500" />
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Chapter Creation
-                </h1>
+            <div className="space-y-1 w-full">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="size-5 text-blue-500" />
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Chapter Creation
+                  </h1>
+                </div>
+                <div>
+                  <ButtonUnlockChapter chapterId={chapterId} />
+                </div>
               </div>
               <p className="text-sm text-gray-500">
                 Create a new chapter for your course. Fill in all required fields below.

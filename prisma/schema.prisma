@@ -244,6 +244,7 @@ model Chapter {
   title       String?
   description String?
   video       Video?
+  isUnlocked  Boolean @default(false)
 
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String @db.ObjectId

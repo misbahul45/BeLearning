@@ -46,7 +46,7 @@ export const deleteChapterAction = async (chapterId: string, slug: string) => {
       throw new Error("Failed to delete chapter");
     }
 }
-export const updateChapterAction = async (slug: string,chapterId: string, values:CHAPTER,) => {
+export const updateChapterAction = async (slug: string,chapterId: string, values:CHAPTER) => {
     try {
         await prisma.chapter.update({
             where:{
@@ -78,3 +78,45 @@ export const updateChapterAction = async (slug: string,chapterId: string, values
         throw new Error("Failed to update chapter");
     }
 }
+
+
+export const getUnlockChapterAction = async (id: string) => {
+    try {
+        const chapters = await prisma.chapter.findUnique({
+            where: {
+                id 
+            },
+            select: {
+                isUnlocked: true
+            }
+        })
+        return chapters;
+    } catch{
+        throw new Error("Failed to get unlock chapter");
+    }
+}
+
+export const toggleChapterLockAction = async (id: string) => {
+    try {
+        // Dapatkan status saat ini dari chapter
+        const chapter = await prisma.chapter.findUnique({
+            where: { id },
+            select: { isUnlocked: true }
+        });
+
+        if (!chapter) {
+            throw new Error("Chapter not found");
+        }
+
+        // Toggle status isUnlocked
+        const updatedChapter = await prisma.chapter.update({
+            where: { id },
+            data: { isUnlocked: !chapter.isUnlocked },
+            select: { isUnlocked: true }
+        });
+
+        return updatedChapter;
+    } catch{
+        throw new Error("Failed to toggle chapter lock");
+    }
+};

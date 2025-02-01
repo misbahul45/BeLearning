@@ -2,8 +2,9 @@
 import React from 'react';
 import { getSavedCoursesAction, saveCourseAction } from '@/actions/course.action';
 import { Heart } from 'lucide-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import LoadingSpinner from '../Loaders/LoadingSpinner';
+import useFetchQuery from '@/hooks/useFetchQuery';
 
 interface Props {
   courseId: string;
@@ -15,10 +16,12 @@ interface Props {
 const ButtonSaveCourses: React.FC<Props> = ({ courseId, userId }) => {
   const queryClient = useQueryClient();
 
-  const { data: savedCourse, isLoading } = useQuery({
+  const { data: savedCourse, isLoading } = useFetchQuery({
     queryKey: ['saved', courseId, userId],
-    queryFn: () => getSavedCoursesAction(userId || "", courseId),
-  });
+    queryFn() {
+      return getSavedCoursesAction(userId||"", courseId);
+    },
+  })
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => saveCourseAction(userId||"", courseId),

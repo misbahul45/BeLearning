@@ -123,7 +123,6 @@ const Page = async ({ params }: PageProps) => {
 
         <Separator className="my-8" />
 
-        {/* Chapters and Resources */}
         <div className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
