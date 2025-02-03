@@ -31,4 +31,14 @@ export interface  update_COURSE{
         author?: boolean;
         page?: number;
         date?: boolean;
-      }
+    }
+
+export interface GET_COURSE_BY_SLUG{
+    id?:boolean,
+    chapters?:boolean,
+    reviews?:boolean,
+    Saves?:boolean,
+    category?:boolean,
+    buyed?:boolean,
+    resources?:boolean
+}

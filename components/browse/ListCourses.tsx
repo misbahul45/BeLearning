@@ -52,6 +52,7 @@ const ListCourses = async ({ search, category, minPrice, maxPrice }: Props) => {
               }
             }
           }}
+          chaptersLength={course.chapters.length}
           price={course.price}
           createdAt={course.createdAt}
         />

@@ -16,11 +16,10 @@ const page = async({ searchParams }:PageProps ) => {
   const user=await getUserAction(session?.user.email as string,{id:true})
 
   const { update }=await searchParamsCache.parse(searchParams);
-  const course = (await getCourseBySlug(update as string)) || undefined;
-
+  const course = (await getCourseBySlug(update as string, { chapters:true, resources:true })) || undefined;
   return (
-    <div className='py-8 px-6'>
-      <h1 className='text-center font-bold bg-clip-text md:text-4xl text-2xl text-transparent bg-gradient-to-r from-cyan-700 via-violet-600 to-blue-600'>{course?"Update Course":"Create New Course"}</h1>
+    <div className='py-8 px-4'>
+      <h1 className='text-center font-bold bg-clip-text md:text-3xl text-2xl text-transparent bg-gradient-to-r from-cyan-700 via-violet-600 to-blue-600'>{course?"Update Course":"Create New Course"}</h1>
       <FormCreate course={{
         id: course?.id || '',
         title: course?.title || '',

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import Image from 'next/image'
-import { Star } from 'lucide-react'
+import { Clock1, Star } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -31,10 +31,11 @@ interface Props{
     }
     price:number
     createdAt:Date;
+    chaptersLength:number
     
 }
 
-const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, author, price, createdAt }) => {
+const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, author, price, createdAt, chaptersLength }) => {
     const { totalReviews, averageRating }=await getReviewCoursesAction({ courseId:id, length:true });
     const session = await auth();
    let user;
@@ -65,9 +66,15 @@ const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, auth
             <Link href={`/browse/${slug}`} className="text-sm font-semibold text-gray-500 line-clamp-2 flex-1 hover:text-gray-800 transition-all duration-100">
                 {title}
             </Link>
-            <Badge variant="secondary" className="shrink-0">
-            {category?.name || 'Uncategorized'}
-            </Badge>
+            <div className="flex gap-2">
+                <Badge variant="secondary" className="shrink-0 flex-1">
+                    {category?.name || 'Uncategorized'}
+                </Badge>
+                <p className='flex-1 text-xs text-gray-600 flex items-center gap-2 justify-end'>
+                    <Clock1 className='size-4' />
+                    {chaptersLength} chapters
+                </p>
+            </div>
         </div>
 
         <div className='flex justify-between items-center'>
@@ -94,13 +101,13 @@ const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, auth
 
         <div className="mt-4 flex items-center justify-between">
             <p className="text-sm font-bold text-gray-600">
-            {price.toLocaleString('id-ID', {
+            {price>0?price.toLocaleString('id-ID', {
                 style: 'currency',
                 currency: 'IDR'
-            })}
+            }):'Free'}
             </p>
             <Button size={'sm'}>
-                Checkout
+               enroll
             </Button>
         </div>
         </CardContent>

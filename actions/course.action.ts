@@ -1,6 +1,6 @@
 'use server'
 import prisma from "@/lib/prisma";
-import { GET_COURSES_REVIEWS, update_COURSE } from "@/types/course.types";
+import { GET_COURSE_BY_SLUG, GET_COURSES_REVIEWS, update_COURSE } from "@/types/course.types";
 import { CREATE_COURSE } from "@/validations/course.validation";
 import { revalidatePath } from "next/cache";
 
@@ -35,16 +35,24 @@ export const createCourseAction=async(authorId:string,values:CREATE_COURSE)=>{
     }
 }
 
-export const getCourseBySlug=async(slug:string)=>{
+export const getCourseBySlug=async(slug:string, getDataValues:GET_COURSE_BY_SLUG)=>{
     try {
-        const course=await prisma.course.findUnique({
-            where:{slug:slug as string},
-            include:{
-                cover:true,
-                category:true
-            }
+
+        return await prisma.course.findUnique({
+          where:{
+            slug
+          },
+          include:{
+            chapters:getDataValues.chapters,
+            userSaves:getDataValues.Saves,
+            CourseReview:getDataValues.reviews,
+            cover:true,
+            resources:getDataValues.resources,
+            CourseBuyedByUser:getDataValues.buyed,
+            category:getDataValues.category
+          }
         })
-        return course;
+          
     }catch{
         throw new Error("Failed to get course");
     }
@@ -162,6 +170,11 @@ export const publishCourseAction = async (slug: string, isPublished: boolean) =>
               },
               select: {
                 ...courseSelect,
+                chapters:{
+                  select:{
+                    id:true
+                  }
+                }
               },
               orderBy:{
                 price:'asc'
