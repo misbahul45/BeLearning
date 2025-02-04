@@ -2,12 +2,17 @@
 import React, { useState } from 'react';
 import { Share2, Check } from 'lucide-react';
 
-const ShareCourse = () => {
+interface Props{
+  slug:string
+}
+
+const ShareCourse:React.FC<Props> = ({ slug }) => {
   const [copied, setCopied] = useState(false);
+
 
   const handleShare = async () => {
     try {
-      const url = window.location.href; 
+      const url = window.location.origin+`/browse/${slug}`; 
       await navigator.clipboard.writeText(url);
       setCopied(true);
 

@@ -38,7 +38,8 @@ interface Props{
 const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, author, price, createdAt, chaptersLength }) => {
     const { totalReviews, averageRating }=await getReviewCoursesAction({ courseId:id, length:true });
     const session = await auth();
-   let user;
+    let user;
+
 
    if(session){
     user = await getUserAction(session?.user?.email as string, { id: true });
@@ -56,8 +57,8 @@ const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, auth
                 className="w-full h-full object-cover rounded-t-lg"
             />
             <div className="absolute top-2 right-2 flex gap-2">
-                <ButtonSaveCourses courseId={id} userId={user?.id || null} />
-                <ShareCourse />
+                {user?.id &&  <ButtonSaveCourses courseId={id} userId={user?.id || null} />}
+                <ShareCourse slug={slug} />
             </div>
         </div>
         </CardHeader>
@@ -106,9 +107,11 @@ const ItemCourse:React.FC<Props> = async({ id,title, cover, slug, category, auth
                 currency: 'IDR'
             }):'Free'}
             </p>
-            <Button size={'sm'}>
-               enroll
-            </Button>
+            <Link href={`/course/enroll/${id}`}>
+                <Button size={'sm'}>
+                    enroll
+                </Button>
+            </Link>
         </div>
         </CardContent>
     </Card>

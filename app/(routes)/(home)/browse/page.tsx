@@ -35,7 +35,7 @@ const Page = async ({ searchParams }: PageProps) => {
 
 
   return (
-    <div className="lg:p-8 p-4 space-y-4">
+    <div className="lg:p-8 p-2 space-y-4">
       <div className="flex flex-col items-center lg:flex-row gap-4">
         <AmountSlider categories={categories} searchCategory={category || 'All'} maxPriceCourse={maxPriceAggregation._max.price} />
       </div>

@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@arcjet/next": "^1.0.0-beta.1",
     "@auth/prisma-adapter": "^2.7.4",
     "@emailjs/nodejs": "^5.0.2",
     "@hookform/resolvers": "^3.9.1",
@@ -51,6 +52,7 @@
     "imagekit": "^6.0.0",
     "imagekitio-next": "^1.0.1",
     "lucide-react": "^0.469.0",
+    "midtrans-client": "^1.4.2",
     "motion": "^11.15.0",
     "next": "15.1.2",
     "next-auth": "^5.0.0-beta.25",

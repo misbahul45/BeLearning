@@ -26,9 +26,9 @@ const HomeLayout =async({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className='flex relative h-screen'>
+    <div className='flex relative h-screen overflow-y-auto'>
       <SidenavHome isLogin={!!session} userRole={user?.profile?.role as 'ADMIN' | 'USER' | 'TEACHER' || 'USER'} />
-      <div className="flex-1 h-full flex flex-col">
+      <div className="flex-1 h-full flex flex-col w-full">
         <HeaderHome />
         <Wrapper>{children}</Wrapper>
       </div>

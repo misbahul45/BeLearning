@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Book, Clock, FileCheck, Globe, Users } from 'lucide-react'
 import Backroute from '@/app/article/[slug]/_Component/Backroute'
+import { auth } from '@/lib/auth'
+import { getUserAction } from '@/actions/user.action'
+import Link from 'next/link'
 
 type PageProps = {
   params: Promise<{
@@ -26,10 +29,19 @@ export async function generateMetadata({ params }: PageProps) {
 const Page: React.FC<PageProps> = async ({ params }) => {
   const slug = (await params).slug
   const course = await getCourseBySlug(slug, { chapters: true, reviews: true, Saves: true, category: true, buyed: true, resources: true })
-
   if (!course) {
     return notFound()
   }
+
+    const session = await auth();
+
+    let user;
+  
+    if(session){
+    user = await getUserAction(session?.user?.email as string, { id: true });
+   }
+   
+   const textExp=user?course.CourseBuyedByUser.some((item)=>(item.userId===user?.id) && item.courseId===course.id && item.isPurchased) ? 'Continue learning' : 'Enroll now':'Enroll now'
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -69,12 +81,16 @@ const Page: React.FC<PageProps> = async ({ params }) => {
             <TabsContent value="resources">
               <Card>
                 <CardContent className='space-y-2'>
-                  {course.resources.map((item) => (
-                    <div key={item.id} className='p-1 border border-gray-200 rounded flex'>
-                      <FileCheck className="mr-2 size-5" />
-                      <p className="text-sm text-gray-500">{item.title}</p>
-                    </div>
-                  ))}
+                    {course.resources.length>0?
+                      course.resources.map((item) => (
+                        <div key={item.id} className='p-1 border border-gray-200 rounded flex'>
+                          <FileCheck className="mr-2 size-5" />
+                          <p className="text-sm text-gray-500">{item.title}</p>
+                        </div>
+                      ))
+                      :
+                      <p>No resources available</p>
+                  }
                 </CardContent>
               </Card>
             </TabsContent>
@@ -123,7 +139,11 @@ const Page: React.FC<PageProps> = async ({ params }) => {
                 <Badge variant="secondary" className="mt-2">
                   {course.price === 0 ? 'Free' : `${course.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`}
                 </Badge>
-                <Button className="w-full mt-4">Enroll Now</Button>
+                <Link href={textExp === 'Enroll now' ? `/course/enroll/${course.id}` : `/course/learn/${slug}`}>
+                  <Button className="w-full mt-4">
+                    {textExp}
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
