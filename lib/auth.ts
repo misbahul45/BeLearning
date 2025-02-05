@@ -1,9 +1,9 @@
 import NextAuth, { DefaultSession, User} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "./prisma";
-import bcrypt from "bcryptjs";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
+import { generateRandomHex } from "./utils";
 
 enum Provider {
   GOOGLE = "GOOGLE",
@@ -21,7 +21,6 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  trustHost:true,
   providers: [
     Credentials({
       credentials: {
@@ -61,8 +60,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = profile?.email as string;
         const username = (profile?.name as string).replace(/\s+/g, "").toLowerCase();
         const image = profile?.picture as string || defaultImage;
-        const password = await bcrypt.hash(email, 10);
-        const token=await bcrypt.hash(email+""+Date.now(), 10);
+        const password = generateRandomHex(16);
+        const token = generateRandomHex(16);
         const user=await prisma.user.findUnique({
           where:{email},
           select:{
@@ -102,8 +101,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = profile?.email || account?.email || "unknown@github.com";
         const username = profile?.login || "unknown_user";
         const imageProfile = (profile?.avatar_url as string) || defaultImage;
-        const password = await bcrypt.hash(email as string, 10);
-        const token=await bcrypt.hash(email+""+Date.now(), 10);
+        const password = generateRandomHex(16);
+        const token = generateRandomHex(16);
 
         const user=await prisma.user.findUnique({
           where:{
@@ -129,7 +128,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     isVerified:true
                   }
                 },
-                provider: Provider.GOOGLE,
+                provider: Provider.GITHUB,
                 profile: {
                   create: {
                     image: {
@@ -138,7 +137,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   },
                 },
               },
-              update: { provider: Provider.GOOGLE }
+              update: { provider: Provider.GITHUB }
             });
           return true;
         }

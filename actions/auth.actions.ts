@@ -2,7 +2,7 @@
 import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { LOGIN, REGISTER } from "@/types/auth.types";
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { redirect } from "next/navigation";
 
 

@@ -66,3 +66,9 @@ export const formatPrice = (value: number) => {
     maximumFractionDigits: 0
   }).format(value)
 }
+
+export const generateRandomHex = (size: number) => {
+  const bytes = new Uint8Array(size);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+};

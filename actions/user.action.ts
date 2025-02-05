@@ -1,5 +1,4 @@
 'use server';
-
 import prisma from "@/lib/prisma";
 import { UPDATE_USER, USER } from "@/types/user.types";
 

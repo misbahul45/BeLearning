@@ -33,7 +33,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     return notFound()
   }
 
-    const session = await auth();
+  const session = await auth();
 
     let user;
   

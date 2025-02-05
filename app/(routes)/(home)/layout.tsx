@@ -10,19 +10,23 @@ const HomeLayout =async({ children }: { children: React.ReactNode }) => {
   let user;
 
   if(session){
-    user=await prisma.user.findUnique({
-      where:{
-        email:session?.user.email
-      },
-  
-      select:{
-        profile:{
-          select:{
-            role:true
+    try {
+      user=await prisma.user.findUnique({
+        where:{
+          email:session?.user.email
+        },
+    
+        select:{
+          profile:{
+            select:{
+              role:true
+            }
           }
         }
-      }
-    })
+      })
+    } catch{
+      user=null
+    }
   }
 
   return (

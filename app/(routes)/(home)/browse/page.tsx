@@ -6,6 +6,11 @@ import ListCourses from '@/components/browse/ListCourses';
 import AmountSlider from '@/components/browse/AmountSlider';
 import prisma from '@/lib/prisma';
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
@@ -17,7 +22,13 @@ export const metadata: Metadata = {
 
 const Page = async ({ searchParams }: PageProps) => {
   const { search, category, maxPrice, minPrice} = await searchParamsCache.parse(searchParams);
-  const categories = await getCategoryAction();
+  let categories: Category[] =[]
+
+  try {
+    categories = await getCategoryAction()
+  } catch{
+    categories=[]
+  }
 
   const categoryCapitalized = category
     ? category
