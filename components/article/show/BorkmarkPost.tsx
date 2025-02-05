@@ -12,17 +12,17 @@ interface Props {
 }
 
 const BookmarkPost = ({ userId, slug, isSaved, size='sm' }: Props) => {
-  const handleSaveArticle = () => {
-    return saveArticleAction(slug, userId);
-  }
+  const [isPending, stratTransition] = React.useTransition()
 
-  const [, formAction, isPending] = React.useActionState(
-    handleSaveArticle,
-    isSaved
-  );
 
+ const OnSubmit=async(e:React.FormEvent)=>{
+  e.preventDefault()
+  stratTransition(async()=>{
+    await saveArticleAction(slug, userId)
+  })
+ } 
   return (
-    <form action={formAction}>
+    <form onSubmit={OnSubmit}>
       <button
         type="submit"
         disabled={isPending}

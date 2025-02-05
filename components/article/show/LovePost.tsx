@@ -12,17 +12,21 @@ interface Props {
 }
 
 const LovePost = ({ userId, slug, isLoved, size='sm' }: Props) => {
+  const [isPending,stratTransition] = React.useTransition()
   const handleLikePost = () => {
     return likeArticleAction(slug, userId);
   }
 
-  const [, formAction, isPending] = React.useActionState(
-    handleLikePost,
-    isLoved
-  )
+
+  const handleOnsubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    stratTransition(async()=>{
+     await  handleLikePost()
+    })
+  }
 
   return (
-    <form action={formAction}>
+    <form onSubmit={handleOnsubmit}>
       <button
         type="submit"
         disabled={isPending}
