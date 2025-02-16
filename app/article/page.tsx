@@ -19,8 +19,6 @@ export async function generateMetadata({ searchParams }: PageProps) {
   }
 }
 
-export const revalidate = 60
-
 const page = async ({ searchParams }: PageProps) => {
   const { page, tag, search } = await searchParamsCache.parse(searchParams)
   const isTagOrSearchPresent = (tag && tag.trim() !== '') || (search && search.trim() !== '')

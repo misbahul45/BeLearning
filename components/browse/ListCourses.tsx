@@ -2,6 +2,7 @@ import React from 'react';
 import ItemCourse from './ItemCourse';
 import { getAllCoursesAction } from '@/actions/course.action';
 import { SearchX } from 'lucide-react';
+import { unstable_noStore } from 'next/cache';
 
 interface Props {
   search?: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const ListCourses = async ({ search, category, minPrice, maxPrice }: Props) => {
+  unstable_noStore()
   const courses = await getAllCoursesAction(search, category, minPrice, maxPrice);
 
   if (courses.length === 0) {

@@ -6,6 +6,7 @@ import React from 'react'
 import ListItemArticle from './ListItemArticle'
 import ArticlePagination from './ArticlePagination'
 import Link from 'next/link'
+import { unstable_noStore } from 'next/cache'
 
 interface Props {
   page: number
@@ -13,9 +14,9 @@ interface Props {
   tag: string
 }
 
-export const revalidate = 60
 
 const ListArticle = async ({ page, search, tag }: Props) => {
+  unstable_noStore()
 
   const articles=await getArticlesAction({
     slug: true,
