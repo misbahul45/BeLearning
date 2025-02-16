@@ -105,7 +105,7 @@ export const checkVerificationToken = async (token: string) => {
 }
 export const signinAction = async (value: LOGIN) => {
     try {
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: {
                 email: value.email,
             },
