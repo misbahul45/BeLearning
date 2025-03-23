@@ -20,7 +20,7 @@ const page = async({ searchParams }:PageProps ) => {
   return (
     <div className='py-8 px-4'>
       <h1 className='text-center font-bold bg-clip-text md:text-3xl text-2xl text-transparent bg-gradient-to-r from-cyan-700 via-violet-600 to-blue-600'>{course?"Update Course":"Create New Course"}</h1>
-      <FormCreate course={{
+      <FormCreate  course={{
         id: course?.id || '',
         title: course?.title || '',
         slug: course?.slug || '',

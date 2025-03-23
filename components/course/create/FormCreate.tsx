@@ -43,7 +43,7 @@ const FormCreate = ({categories, authorId, course}:Props) => {
   const [isPending, startTransition] = React.useTransition();
   const [isPendingCourse, startTransitionCourse] = React.useTransition();
   const [category, setCategory]=React.useState<{id:string, name:string}|null>(
-    course?{
+    course?.id?{
       id:course.categoryId,
       name:course?.category?.name
     }:null
@@ -69,10 +69,12 @@ const FormCreate = ({categories, authorId, course}:Props) => {
   const [image, setImage] = useState<TypeImage | null>(course?.cover || null);
   const [money, setMoney] = useState<string>(course?.price.toString() || '0');
 
+  console.log(!course?.id)
+
   const onSubmit = (values: CREATE_COURSE | update_COURSE) => {
     startTransitionCourse(async () => {
       await sleep()
-      if(!course){
+      if(!course?.id){
         try {
           const { slug:courseSlug }=await createCourseAction(authorId, values);
           form.reset()
@@ -115,7 +117,9 @@ const FormCreate = ({categories, authorId, course}:Props) => {
     })
   };
 
-  console.log(form.getValues())
+
+  console.log(form)
+
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -188,7 +192,7 @@ const FormCreate = ({categories, authorId, course}:Props) => {
             {isPendingCourse?
                 <Loader />
                 :
-                (course?'Update Course':'Create Course')
+                (course?.id?'Update Course':'Create Course')
             }
           </Button>
         </form>

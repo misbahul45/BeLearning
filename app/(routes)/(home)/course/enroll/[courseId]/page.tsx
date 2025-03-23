@@ -99,7 +99,7 @@ const page:React.FC<PageProps> = async({ params }) => {
                 </CardTitle>
                 <div className="flex items-center gap-4">
                   <span className="text-2xl font-bold text-primary">
-                    {course?.price === 0 ? (
+                    {course?.price == 0 ? (
                       <span className="text-green-600">Free</span>
                     ) : (
                       <span>{course?.price.toLocaleString('id-ID', {

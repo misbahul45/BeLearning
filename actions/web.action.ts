@@ -14,23 +14,26 @@ const imageKit = new ImageKit({
   urlEndpoint: "https://ik.imagekit.io/misbahul"
 });
 
-export const uploadImage = async (file: File) => {
+
+
+export const uploadImage = async (base64Image: string, fileName: string) => {
   try {
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
     const response = await imageKit.upload({
-      file: fileBuffer,
-      fileName: file.name,
+      file: base64Image, 
+      fileName,
     });
-    
+
     if (!response || !response.url) {
       throw new Error("Failed to upload image");
     }
-    
+
     return { url: response.url, fileId: response.fileId };
   } catch (error) {
-    throw error;
+    console.error("Image upload error:", error);
+    throw new Error((error as Error).message || "Image upload failed");
   }
 };
+
 
 export const deleteImage = async (fileId: string) => {
   try {

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { deleteImage, uploadImage } from '@/actions/web.action';
 import { CloudUploadIcon, ImageUpIcon, LoaderIcon, Trash2Icon, SparklesIcon } from 'lucide-react';
-import { sleep } from '@/lib/utils';
+import { sleep, toBase64 } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Image as TypeImage } from '@/types/web.types';
 import WEB_VALIDATION from '@/validations/web.validation';
@@ -42,20 +42,40 @@ const FormImage = ({ image, setImage }: FormImageProps) => {
   const handleUploadImage = async (file: File) => {
     try {
       setLoading({ type: 'upload', status: true });
-      const res = await uploadImage(file);
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please upload an image file.");
+        setLoading({ type: '', status: false });
+        return;
+      }
+      
+      if (file.size > 5242880) { // 5MB
+        toast.error("Image size should be less than 5MB.");
+        setLoading({ type: '', status: false });
+        return;
+      }
+      
+      const base64Image = await toBase64(file);
+  
+
+      const res = await uploadImage(base64Image, file.name);
+
+      console.log(res);
+
       if (res?.url) {
-        toast.success("Image uploaded successfully!");
-        const imageURL = WEB_VALIDATION.URL.safeParse({url:res.url})
+        const imageURL = WEB_VALIDATION.URL.safeParse({url: res.url});
         if(imageURL.success){
           setImage(res);
+          toast.success("Image uploaded successfully!");
         }
       } else {
         toast.error("Image upload failed.");
       }
-    } catch{
-      toast.error("Image upload failed. Please try again.");
+    } catch (error) {
+      console.error(error);
+      toast.error('Image upload failed. Please try again.');
+    } finally {
+      setLoading({ type: '', status: false });
     }
-    setLoading({ type: '', status: false });
   };
 
   const triggerFileInput = () => {

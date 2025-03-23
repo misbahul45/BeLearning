@@ -9,7 +9,7 @@ export class COURSE_VALIDATION{
             url:z.string().url(),
             fileId:z.string({required_error:"File id is required"})
         }),
-        price:z.number({required_error:"Price is required"}),
+        price:z.number({required_error:"Price is required"}).min(0),
         categoryId:z.string()
     })
     static readonly RESOURCE=z.object({
